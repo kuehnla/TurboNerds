@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.test import TestCase
-from SchedulingApp.models import User
+from models import *
 
 
 # Create your tests here.
