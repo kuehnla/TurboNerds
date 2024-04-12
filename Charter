@@ -1,0 +1,33 @@
+TurboNerds
+Cord: https://discord.gg/XBbtmb94
+
+1)    Availability for meeting expectations
+        Meeting time should be thrice a week on Thursdays at 5:30pm, Sundays at 6:30pm, and Tuesdays after lab. These meetings will occur on Discord.
+2)    Response time to communication expectations
+        Responses should be given within 24 hours.
+3)    Definition of done: when is a task complete? (hint: "I'm done with that but I didn't check it in to github" is not done.)
+        A task is completed when passing all relevant tests, and is reviewed and merged into main.
+4)    Scrum meeting format/frequency and distribution of documentation tasks (meeting minutes, updating task board)
+        Meetings over discord once a week for around 30 minutes, where we will discuss who will take up what tasks, and update those on the task board. 
+        If someone needs to miss a meeting due to other obligations they must inform team members through discord minimum 2 hours in advance.
+5)    Procedure for adopting policies (e.g. code style, code check-in steps, documentation updates) 
+        a) Code will be discussed during weekly meetings. If someone requires additional review they can request a team member look over their work through discord.
+
+6)    Procedure for handling a member who is not meeting expectations
+        a) must include at least 3 actions before involving the instructor
+                Initially, if member is not meeting expectations outlined in the charter, email them and notify group of issue.
+
+                If the issue is a complete lack of communication on the part of a member:
+                        If no response within 24 hours, meet with group and discuss what action is needed, if any.
+                        Decide as a group an appropriate amount of time to extend to the team member.
+                        If there is no response, notify TA / instructor.
+
+                If team member is unable to keep up with tasks, but participating:
+                        Reach out to team member
+                        Determine the cause of the issue: 
+                                Lack of prior knowledge in a particular area: if they are willing, try to assign them to different types of tasks
+                                Lack of time / taking on too many tasks: try to rearrange the tasks to evenly distribute the workload
+                        If team member is unable to contribute on a regular basis, reach out to TA / instructor.
+    
+7) Signatures: each member must sign their name by typing their name at the bottom of the document.
+Jennifer Justus, Nathan Stout, Nathan Jensen, Alex Kuehnl, Jacob Lind
