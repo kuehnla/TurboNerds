@@ -17,7 +17,7 @@ class User(models.Model):
   is_admin = models.BooleanField(default=False)
 
 
-class Course:
+class Course(models.Model):
   department = models.CharField(max_length=30)
   number = models.IntegerField()
   name = models.CharField(max_length=30)
