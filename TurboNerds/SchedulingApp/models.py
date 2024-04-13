@@ -4,7 +4,7 @@ from django.db import models
 # Create your models here.
 
 
-class User(models.Model):
+class UserProfile(models.Model):
   login = models.CharField(max_length=30)
   password = models.CharField(max_length=30)
   first_name = models.CharField(max_length=30)
@@ -26,7 +26,7 @@ class Course(models.Model):
 
 class Lab(models.Model):
   assistant = models.ForeignKey(
-    User,
+    UserProfile,
     on_delete=models.CASCADE,
     limit_choices_to={'is_assistant': True}
   )
@@ -39,7 +39,7 @@ class Lab(models.Model):
 class Section(models.Model):
   course = models.ForeignKey(Course, on_delete=models.CASCADE)
   instructor = models.ForeignKey(
-    User,
+    UserProfile,
     on_delete=models.CASCADE,
     limit_choices_to={'is_instructor': True}
   )
