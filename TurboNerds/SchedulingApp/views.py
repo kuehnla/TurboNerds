@@ -1,17 +1,20 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
 
-from TurboNerds.SchedulingApp.forms import (
+from .forms import (
     RegistrationForm,
     EditProfileForm
 )
-from django.contrib.auth.models import User
+from .models import UserProfile
 from django.contrib.auth.forms import UserChangeForm, PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
+
 
 # Create your views here.
 def home(request):
     return render(request, 'home.html')
+
+
 def register(request):
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
@@ -23,6 +26,7 @@ def register(request):
 
             args = {'form': form}
             return render(request, 'accounts/register.html', args)
+
 
 def edit_profile(request):
     if request.method == 'POST':
