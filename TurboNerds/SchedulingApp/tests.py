@@ -1,5 +1,4 @@
 from django.test import TestCase
-from django.test import TestCase
 from models import *
 
 
@@ -50,3 +49,20 @@ class TATestCase(TestCase):
                                                             tarun.password))
         self.assertEqual(tarun.phone_number, '0987654321', msg=('TA phone number incorrect: Expected: 0987654321 Was: ',
                                                                 tarun.phone_number))
+
+
+class CourseCreationTestCase(TestCase):
+
+    def setUp(self):
+        courses.objects.create(course_name='Intro to Software Engineering', semester='Spring', department='CS'
+                               , number='361')
+
+    def test_course_creation(self):
+        current = courses.objects.get('Intro to Software Engineering')
+        self.assertEqual(current.semester, 'Spring', msg=("Course semester incorrect: Expected: Spring Was: ",
+                                                          current.semester))
+        self.assertEqual(current.number, '361', msg=("Course number incorrect: Expected: 361 Was: ", current.number))
+        self.assertEqual(current.department, 'CS', msg=("Course department incorrect: Expected: CS Was: ",
+                                                        current.department))
+
+
