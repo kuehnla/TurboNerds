@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 
 from .forms import RegistrationForm, EditProfileForm
-
+from .models import User
 from django.conf import settings
 from django.contrib.auth.forms import UserChangeForm, PasswordChangeForm, UserCreationForm
 from django.contrib.auth import update_session_auth_hash
@@ -16,30 +16,58 @@ def home(request):
 
 
 def register(request):
-    if request.method == 'POST':
+    #submitted = False
+    if request.method == "POST":
         form = RegistrationForm(request.POST)
+        #form = UserCreationForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('/account')
-        else:
-            form = RegistrationForm()
+            form.save(commit=False)
+            first_name = form.cleaned_data['first_name']
+            last_name = form.cleaned_data['last_name']
+            email = form.cleaned_data['email']
+            phone = form.cleaned_data['phone']
+            role = form.cleaned_data['role']
 
-            args = {'form': form}
-            return render(request, 'accounts/register.html', args)
+            if role == 'Instructor':
+                user_profile = User.objects.create(first_name=first_name, last_name=last_name,
+                                           email=email, phone=phone, is_instructor=True, is_admin=False,
+                                           is_assistant=False)
 
+            elif role == 'Supervisor':
+                user_profile = User.objects.create(first_name=first_name, last_name=last_name,
+                                           email=email, phone=phone, is_instructor=False, is_admin=True,
+                                           is_assistant=False)
 
-def edit_profile(request):
-    if request.method == 'POST':
-        form = EditProfileForm(request.POST, instance=request.user)
+            else:
+                user_profile =User.objects.create(first_name=first_name, last_name=last_name,
+                                           email=email, phone=phone, is_instructor=False, is_admin=False,
+                                           is_assistant=True)
 
-        if form.is_valid():
-            form.save()
-            return redirect('/accounts')
+            user_profile.save()
+
+            return redirect('home')
     else:
-        form = EditProfileForm(instance=request.user)
-        args = {'form': form}
-        return render(request, 'accounts/edit_profile.html', args)
+        form = RegistrationForm()
+        return render(request, 'accounts/register.html', {'form': form})
 
+
+def edit_profile(request,email):
+    if request.method == 'POST':
+        user = User.objects.get(email=email)
+        form = EditProfileForm(request.POST, instance=user)
+        if form.is_valid():
+            user.first_name = request.POST['first_name']
+            user.last_name = request.POST['last_name']
+            user.email = request.POST['email']
+            user.phone = request.POST['phone']
+
+            User.objects.filter(email=email).update(first_name=user.first_name
+                                                    , last_name=user.last_name, email=user.email, phone=user.phone)
+            return redirect('home')
+    else:
+        user = User.objects.get(email=email)
+        form = EditProfileForm(instance=user)
+        return render(request, 'accounts/edit_profile.html', {'login':user,'form': form})
 
 class LoginView(auth_views.LoginView):
     template_name = 'registration/login.html/'
