@@ -1,0 +1,99 @@
+@font-face {
+    font-family: "Poppins-Regular";
+    src: url("fonts/Poppins-Regular.ttf") format("truetype");
+}
+
+.form-container {
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+}
+
+
+#id_password,
+#id_username {
+    width: 20vw;
+}
+
+.submit-btn:hover, #id_password:hover,
+#id_username:hover {
+    cursor: pointer;
+}
+
+.submit-btn {
+    border: none;
+    background-color: #f2f2f2;
+    font-size: 16px;
+    height: 32px;
+    margin-top: 8px;
+    border-radius: 8px;
+    width: 128px;
+}
+
+#id_password,
+#id_username {
+    box-sizing: border-box;
+    height: 32px;
+}
+
+input {
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+}
+
+input:focus {
+    outline: 1px solid cornflowerblue;
+    border: 1px solid blue;
+}
+
+.entry {
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 16px;
+    padding-top: 16px;
+}
+
+.user, .pass {
+    display: flex;
+    gap: 4px;
+    padding-bottom: 8px;
+}
+
+#person, #lock {
+    width: 20px;
+}
+
+form {
+    background-color: #fff;
+    border-radius: 8px;
+    width: 32vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 32px;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    background-color: #f2f2f2;
+    font-family: Poppins-Regular, sans-serif;
+    font-size: 16px;
+    margin-top: 40px;
+}
+
+p {
+    font-size: 14px;
+    padding-top: 32px;
+}
+
+.submit-div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 62%;
+    padding-top: 16px;
+}
+
+a {
+    padding-top: 8px;
+    text-decoration: none;
+    color: red;
+}
