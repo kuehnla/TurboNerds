@@ -2,7 +2,7 @@ from django.test import TestCase
 
 from django.utils import timezone
 
-from .models import *
+from ..models import *
 
 
 # Create your tests here.
@@ -67,13 +67,13 @@ class TATestCase(TestCase):
 class CourseCreationTestCase(TestCase):
 
     def setUp(self):
-        courses.objects.create(course_name='Intro to Software Engineering', semester='Spring', department='CS'
+        Course.objects.create(name='Intro to Software Engineering', semester='Spring', department='CS'
                                , number='361')
 
     def test_course_creation(self):
-        current = courses.objects.get('Intro to Software Engineering')
+        current = Course.objects.get(name='Intro to Software Engineering')
         self.assertEqual(current.semester, 'Spring', msg=("Course semester incorrect: Expected: Spring Was: ",
                                                           current.semester))
-        self.assertEqual(current.number, '361', msg=("Course number incorrect: Expected: 361 Was: ", current.number))
+        self.assertEqual(current.number, 361, msg=("Course number incorrect: Expected: 361 Was: ", current.number))
         self.assertEqual(current.department, 'CS', msg=("Course department incorrect: Expected: CS Was: ",
                                                         current.department))
