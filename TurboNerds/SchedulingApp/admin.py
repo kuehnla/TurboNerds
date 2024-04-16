@@ -19,7 +19,6 @@ from .models import Lab
 admin.site.register(Course)
 admin.site.register(Section)
 admin.site.register(Lab)
-<<<<<<< HEAD
 
 
 # admin.site.register(User)
@@ -97,6 +96,3 @@ class UserAdmin(BaseUserAdmin):
 
 admin.site.register(User, UserAdmin)
 admin.site.unregister(Group)
-=======
-admin.site.register(UserProfile)
->>>>>>> b399895618a39f47409230b758dd399aa2fefabc
