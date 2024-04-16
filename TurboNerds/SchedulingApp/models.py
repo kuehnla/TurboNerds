@@ -2,11 +2,14 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
 
-
+class ROLES(models.TextChoices):
+    Supervisor = "Supervisor"
+    Instructor = "Instructor"
+    TA = "TA"
 # Create your models here.
 
 class MyUserManager(BaseUserManager):
-    def create_user(self, email, password, first_name, last_name, phone,
+    def create_user(self, email, password, first_name, last_name, phone, role,
                     is_instructor, is_assistant, is_admin, is_superuser):
         if not email:
             raise ValueError('Users must have an email address')
@@ -18,6 +21,7 @@ class MyUserManager(BaseUserManager):
             first_name=first_name,
             last_name=last_name,
             phone=phone,
+            role=role,
             created_at=timezone.now(),
             is_instructor=is_instructor,
             is_assistant=is_assistant,
@@ -43,6 +47,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
     phone = models.CharField(max_length=11)
+    role = models.CharField(max_length=20, choices=ROLES.choices, default="TA")
     is_instructor = models.BooleanField(default=False)
     is_assistant = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
@@ -55,10 +60,10 @@ class User(AbstractBaseUser, PermissionsMixin):
                        'is_instructor', 'is_assistant', 'is_admin']
 
     def __str__(self):
-      return self.email
+        return self.email
 
     def get_full_name(self):
-      return self.first_name + " " + self.last_name
+        return self.first_name + " " + self.last_name
 
     @property
     def is_staff(self):
