@@ -1,17 +1,16 @@
 from django import forms
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
-#use of django forms
-from .models import UserProfile
+# use of django forms
+# from .models import User
 
 
 class RegistrationForm(UserCreationForm):
     email = forms.EmailField(required=True)
 
     class Meta:
-        model = User
+        model = get_user_model()
         fields = (
-            'username',
             'first_name',
             'last_name',
             'email',
@@ -35,7 +34,7 @@ class EditProfileForm(UserChangeForm):
     template_name = '/something/else'
 
     class Meta:
-        model = User
+        model = get_user_model()
         fields = (
             'email',
             'first_name',
