@@ -4,9 +4,12 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 # use of django forms
 # from .models import User
 
+# use of django forms
+
 
 class RegistrationForm(UserCreationForm):
-    email = forms.EmailField(required=True)
+  email = forms.EmailField(required=True)
+
 
     class Meta:
         model = get_user_model()
@@ -18,16 +21,16 @@ class RegistrationForm(UserCreationForm):
             'password2'
         )
 
-    def save(self, commit=True):
-        user = super(RegistrationForm, self).save(commit=False)
-        user.first_name = self.cleaned_data['first_name']
-        user.last_name = self.cleaned_data['last_name']
-        user.email = self.cleaned_data['email']
+  def save(self, commit=True):
+    user = super(RegistrationForm, self).save(commit=False)
+    user.first_name = self.cleaned_data['first_name']
+    user.last_name = self.cleaned_data['last_name']
+    user.email = self.cleaned_data['email']
 
-        if commit:
-            user.save()
+    if commit:
+      user.save()
 
-        return user
+    return user
 
 
 class EditProfileForm(UserChangeForm):
@@ -41,3 +44,4 @@ class EditProfileForm(UserChangeForm):
             'last_name',
             'password'
         )
+

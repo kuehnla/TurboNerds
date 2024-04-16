@@ -1,16 +1,17 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.forms import UserCreationForm
 
 from .forms import RegistrationForm, EditProfileForm
 
 from django.conf import settings
-from django.contrib.auth.forms import UserChangeForm, PasswordChangeForm
+from django.contrib.auth.forms import UserChangeForm, PasswordChangeForm, UserCreationForm
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth import views as auth_views
 
 
 # Create your views here.
 def home(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
     return render(request, 'home.html')
 
 
