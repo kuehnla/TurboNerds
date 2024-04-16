@@ -12,6 +12,8 @@ from django.contrib.auth import update_session_auth_hash
 
 # Create your views here.
 def home(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
     return render(request, 'home.html')
 
 
