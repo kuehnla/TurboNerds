@@ -5,12 +5,19 @@
 
 .form-container {
     box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+    background-color: #fff;
+    text-align: center;
+}
+
+h2 {
+    margin-bottom: 0;
 }
 
 
 #id_password,
 #id_username {
-    width: 20vw;
+    width: 100%;
+    padding: 8px;
 }
 
 .submit-btn:hover, #id_password:hover,
@@ -18,8 +25,12 @@
     cursor: pointer;
 }
 
+.submit-btn:hover {
+    outline: 1px solid blue;
+}
+
 .submit-btn {
-    border: none;
+    border: 1px solid black;
     background-color: #f2f2f2;
     font-size: 16px;
     height: 32px;
@@ -48,6 +59,7 @@ input:focus {
     flex-direction: column;
     padding-bottom: 16px;
     padding-top: 16px;
+    width: 62%;
 }
 
 .user, .pass {
@@ -61,13 +73,12 @@ input:focus {
 }
 
 form {
-    background-color: #fff;
     border-radius: 8px;
-    width: 32vw;
+    width: 500px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 32px;
+    padding: 0px 32px 32px 32px;
 }
 
 body {
