@@ -1,7 +1,5 @@
 from django.test import TestCase
 
-from django.utils import timezone
-
 from ..models import *
 
 
@@ -11,7 +9,7 @@ class AdminTestCase(TestCase):
   def setUp(self):
     User.objects.create(first_name='Dean', last_name='Griffin', phone='414-444-1234',
                                email='Dean@uwm.edu', is_instructor=False, is_assistant=False,
-                               is_admin=True, created_at=timezone.now())
+                               is_admin=True)
 
   def test_admin_creation(self):
     # Assert properties of admin user
@@ -29,7 +27,7 @@ class InstructorTestCase(TestCase):
   def setUp(self):
     User.objects.create(last_name='Rock', email='rock@uwm.edu', phone='414-444-1234',
                                is_assistant=False, is_admin=False, is_instructor=True,
-                               created_at=timezone.now())
+                               )
 
   def test_instructor_creation(self):
     # Assert properties of instructor user using get request
@@ -45,7 +43,7 @@ class TATestCase(TestCase):
   def setUp(self):
     User.objects.create(first_name='Tarun', last_name='Eapen', email='tarun@uwm.edu', phone='414-000-1234',
                         is_assistant=True, is_instructor=False, is_admin=False,
-                        created_at=timezone.now())
+                        )
 
   def test_TA_creation(self):
     # Assert properties of TA user using get request
