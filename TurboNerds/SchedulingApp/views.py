@@ -81,12 +81,12 @@ class ProfileModification:
 
                 elif role == 'Supervisor':
                     user_profile = User.objects.create(first_name=first_name, last_name=last_name,
-                                           email=email, phone=phone, is_instructor=False, is_admin=True,
+                                           password=password,email=email, phone=phone, is_instructor=False, is_admin=True,
                                            is_assistant=False)
 
                 else:
                     user_profile =User.objects.create(first_name=first_name, last_name=last_name,
-                                           email=email, phone=phone, is_instructor=False, is_admin=False,
+                                           password=password, email=email, phone=phone, is_instructor=False, is_admin=False,
                                            is_assistant=True)
 
                 user_profile.save()
