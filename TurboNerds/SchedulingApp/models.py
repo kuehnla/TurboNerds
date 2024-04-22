@@ -1,15 +1,17 @@
 from django.db import models
-from django.utils import timezone
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
+
 
 class ROLES(models.TextChoices):
     Supervisor = "Supervisor"
     Instructor = "Instructor"
     TA = "TA"
+
+
 # Create your models here.
 
 class MyUserManager(BaseUserManager):
-    def create_user(self, email, password, first_name, last_name, phone, role,
+    def create_user(self, email, password, first_name, last_name, phone,
                     is_instructor, is_assistant, is_admin, is_superuser):
         if not email:
             raise ValueError('Users must have an email address')
@@ -21,12 +23,10 @@ class MyUserManager(BaseUserManager):
             first_name=first_name,
             last_name=last_name,
             phone=phone,
-            role=role,
-            created_at=timezone.now(),
             is_instructor=is_instructor,
             is_assistant=is_assistant,
             is_admin=is_admin,
-            is_superuser=is_superuser,
+            is_superuser=is_superuser
         )
 
         user.set_password(password)
@@ -51,8 +51,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_instructor = models.BooleanField(default=False)
     is_assistant = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
-    is_superuser = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)
 
     objects = MyUserManager()
     USERNAME_FIELD = 'email'
