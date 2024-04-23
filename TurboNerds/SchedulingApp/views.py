@@ -8,6 +8,8 @@ from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth import views as auth_views
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.views import LoginView
+from django.urls import reverse_lazy
 
 
 # Create your views here.
@@ -19,7 +21,8 @@ class HomeViews:
     def instructor_home(request):
         name = "Instructor"
         return render(request, 'instructor_home.html', {"name": name})
-
+    def supervisor_home(request):
+        return render(request, 'supervisor_home.html', {})
 
 class CourseInformation:
     from django.db.models import Prefetch
@@ -67,35 +70,29 @@ class ProfileModification:
             form = RegistrationForm(request.POST)
 
             if form.is_valid():
-                form.save(commit=False)
-                first_name = form.cleaned_data['first_name']
-                last_name = form.cleaned_data['last_name']
+                form.save()
                 email = form.cleaned_data['email']
-                password = form.cleaned_data['password']
-                phone = form.cleaned_data['phone']
                 role = form.cleaned_data['role']
 
                 if role == 'Instructor':
-                    user_profile = User.objects.create(first_name=first_name, last_name=last_name,
-                                           password=password, email=email, phone=phone, is_instructor=True, is_admin=False,
+                    user = User.objects.filter(email=email).update( is_instructor=True, is_admin=False,
                                            is_assistant=False)
 
                 elif role == 'Supervisor':
-                    user_profile = User.objects.create(first_name=first_name, last_name=last_name,
-                                           password=password,email=email, phone=phone, is_instructor=False, is_admin=True,
+                    user = User.objects.filter(email=email).update(is_instructor=False, is_admin=True,
                                            is_assistant=False)
 
                 else:
-                    user_profile =User.objects.create(first_name=first_name, last_name=last_name,
-                                           password=password, email=email, phone=phone, is_instructor=False, is_admin=False,
+                    user = User.objects.filter(email=email).update( is_instructor=False, is_admin=False,
                                            is_assistant=True)
 
-                user_profile.save()
 
-                return redirect('home')
+
+                return redirect('supervisor_home')
         else:
             form = RegistrationForm()
-            return render(request, 'accounts/register.html', {'form': form})
+
+        return render(request, 'accounts/register.html', {'form': form})
 
 
     def edit_profile(request,email):
@@ -110,7 +107,7 @@ class ProfileModification:
 
                 User.objects.filter(email=email).update(first_name=user.first_name
                                                     , last_name=user.last_name, email=user.email, phone=user.phone)
-                return redirect('home')
+                return redirect('instructor_home')
         else:
 
             user = User.objects.get(email=email)
@@ -118,25 +115,27 @@ class ProfileModification:
             return render(request, 'accounts/edit_profile.html', {'login':user,'form': form})
 
 class Logins:
-    """
-    def login_user(request):
-        if request.method == "POST":
-            email = request.POST['email']
-            password = request.POST['password']
 
-            user = authenticate(request, email=email, password=password)
-            if user is not None:
-                login(request, user)
-
-                if(user.is_instructor):
-                    return redirect('instructor_home')
-        else:
-            return render(request, "login.html", {})
-    """
     def logout_user(request):
         logout(request)
         return redirect('home')
 
-class LoginView(auth_views.LoginView):
-    template_name = 'registration/login.html/'
-    next_page = './home.html'
+
+from django.http import HttpResponseRedirect
+
+class CustomLoginView(LoginView):
+    def get_success_url(self):
+        # Get the user object after successful login
+        user = self.request.user
+
+        # Assuming you have a profile or a field in your user model indicating the role
+        # You can replace this logic with your actual logic to determine the user's role
+        if user.is_authenticated:
+            if user.is_instructor:
+                return reverse_lazy('instructor_home')
+            elif user.is_admin:
+                return reverse_lazy('supervisor_home')
+            elif user.is_assistant:
+                return reverse_lazy('home')
+        # If the user's role is not defined, redirect to some default URL
+        return reverse_lazy('default_home')  # You need to define this URL in your urls.py
