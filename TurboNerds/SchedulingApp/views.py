@@ -54,7 +54,8 @@ class CourseInformation:
 
     def read_information(request):
         users = User.objects.all()
-
+        if not request.user.is_authenticated:
+            return redirect('login')
         return render(request, 'course/user_information.html', {'users': users})
 
 
