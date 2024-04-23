@@ -1,11 +1,13 @@
-<!DOCTYPE html>
+{% extends 'base.html' %}
+
+{% block content %}
 <html lang="en">
-<head>
+    <head>
     <meta charset="UTF-8">
     <title>Courses with Labs and Sections</title>
 </head>
 <body>
-    <h1>Courses Information</h1>
+    <h1>Course Information</h1>
     {% for course in courses %}
         <h2>{{ course.name }} ({{ course.department }} {{ course.number }})</h2>
         <h3>Labs:</h3>
@@ -34,5 +36,7 @@
         </ul>
         <br/>
     {% endfor %}
-</body>
-</html>
+{% endblock %}
+
+
+

@@ -1,6 +1,9 @@
+{% extends 'base.html' %}
+
+{% block content %}
 <div style="text-align: center;">
     <meta charset="UTF-8">
-    
+
 
     <h1>Edit Profile</h1>
 <body>
@@ -10,7 +13,7 @@
         {% endfor %}
     {% endif %}
     <form method="post" action ="{% url 'edit_profile' login %}">
-        
+
         {% csrf_token %}
         {{ form.as_p }}
         <input type="submit" value="Update" class="btn btn-secondary">
@@ -18,3 +21,7 @@
 
 </body>
 </div>
+{% endblock %}
+
+
+
