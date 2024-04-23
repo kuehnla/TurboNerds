@@ -46,6 +46,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
+    password = models.CharField(max_length=20)
     phone = models.CharField(max_length=11)
     role = models.CharField(max_length=20, choices=ROLES.choices, default="TA")
     is_instructor = models.BooleanField(default=False)
@@ -74,6 +75,9 @@ class Course(models.Model):
     name = models.CharField(max_length=30)
     semester = models.CharField(max_length=30)
 
+    def __str__(self):
+        return self.name
+
 
 class Lab(models.Model):
     assistant = models.ForeignKey(
@@ -81,11 +85,14 @@ class Lab(models.Model):
         on_delete=models.CASCADE,
         limit_choices_to={'is_assistant': True}
     )
+    lab_name = models.CharField(max_length=3, default="lab 1")
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
     days = models.CharField(max_length=10, default="Mo We")
 
+    def __str__(self):
+        return self.lab_name
 
 class Section(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
@@ -94,8 +101,12 @@ class Section(models.Model):
         on_delete=models.CASCADE,
         limit_choices_to={'is_instructor': True}
     )
+    section_name = models.CharField(max_length=3, default="Section 1")
     start_date = models.DateField()
     end_date = models.DateField()
     start_time = models.TimeField()
     end_time = models.TimeField()
     days = models.CharField(max_length=10, default="Tu Th")
+
+    def __str__(self):
+        return self.section_name

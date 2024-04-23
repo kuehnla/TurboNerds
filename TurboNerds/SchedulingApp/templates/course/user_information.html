@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<html lang="en">
+    <meta charset="UTF-8">
+    <h1>User Information</h1>
+    {% for user in users %}
+        <div class="card mb-3" style="max-width: 540px;">
+  <div class="row g-0">
+    <div class="col-md-4">
+      <img src="{% static 'images/default.jpeg' %}" class="img-fluid rounded-start" alt="Profile Image">
+    </div>
+    <div class="col-md-8">
+      <div class="card-body">
+        <h5 class="card-title">{{ user.get_full_name }}</h5>
+          <p class="card-text">Email:<a href="https://outlook.office.com/mail"> {{ user.email }}</a></p>
+          <p class="card-text">Phone number: {{ user.phone }}</p>
+          {% if user.is_assistant %}
+            <p class="card-text">Role: TA</p>
+          {% elif user.is_instructor %}    
+              <p class="card-text">Role: Instructor</p>
+          {% else %}    
+              <p class="card-text">Role: Supervisor</p>
+          {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+        <br><br/>
+        
+      
+    {% endfor %}
+{% endblock %}
+
