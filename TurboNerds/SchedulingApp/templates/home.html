@@ -1,1 +1,32 @@
-{%  block title %} TA Home {% endblock %}
+{% extends 'base.html' %}
+
+{#{% block head %}#}
+{#  {% load static %}#}
+{#  <link rel="stylesheet" href={% static 'home.css' %}>#}
+{#  <title>TA Home</title>#}
+{#{% endblock %}#}
+
+{% load static %}
+
+{% block content %}
+
+
+  {% block css %}
+    <link rel="stylesheet" href={% static 'home.css' %}>
+  {% endblock %}
+
+  <div class="container">
+    <h1>Welcome {{ user.first_name }}</h1>
+    <h2>Your Labs</h2>
+    <div class="card_container">
+      {% for lab in labs %}
+        <div class="lab_card">
+          <h3>{{ lab.course.department }}  {{ lab.course.number }}</h3>
+          <h5>Lab section: {{ lab.lab_name }}</h5>
+          <p>{{ lab.start_time }} - {{ lab.end_time }}</p>
+          <p>Days: {{ lab.days }}</p>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+{% endblock %}
