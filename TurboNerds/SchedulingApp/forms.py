@@ -11,12 +11,15 @@ from .models import User, Lab
 # use of django forms
 
 
-class RegistrationForm(ModelForm):
+class RegistrationForm(UserCreationForm):
     email = forms.EmailField(required=True)
+    first_name = forms.CharField(max_length=50)
+    last_name = forms.CharField(max_length=50)
+
 
     class Meta:
-        model = get_user_model()
-        fields = ('first_name', 'last_name', 'password', 'email', 'phone', 'role')
+        model = User
+        fields = ('first_name', 'last_name', 'email', 'phone', 'role', 'password1', 'password2')
 
 class EditProfileForm(ModelForm):
 
