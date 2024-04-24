@@ -1,26 +1,37 @@
 from django.db import models
-from models import User, Course, ROLES, MyUserManager, Lab, Section
+from .models import User, Course, ROLES, MyUserManager, Lab, Section
 
 
 class Supervisor(User):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, limit_choices_to={'is_supervisor': True})
-    role = models.CharField(max_length=20, choices=ROLES.choices, default="Supervisor")
-    is_admin = models.BooleanField(default=True)
-
+    def __init__(self, *args, **kwargs):
+        super().__init__(self, *args, **kwargs)
+        self.role = models.CharField(max_length=20, choices=ROLES.choices, default="Supervisor")
+        self.is_admin = True
+        self.id = 1
 
     @staticmethod
     def create_course(department, number, name, semester):
         try:
-            Course.objects.get(department, number, semester, name)
+            Course.objects.filter(department=department, number=number, semester=semester, name=name)
         except Course.DoesNotExist:
-            course = Course(department, number, name, semester)
+            course = Course(department=department, number=number, name=name, semester=semester)
             course.save()
             return course
         else:
             return "This course already exists"
 
+    @staticmethod
+    def create_section(course, instructor, section_name, start_date, end_date, start_time, end_time, days):
+        try:
+            s = Section.objects.filter(section_name=section_name, start_time=start_time, end_time=end_time)
+        except Section.DoesNotExist:
+            s = Section(course, instructor, section_name, start_date, end_date, start_time, end_time, days)
+            s.save()
+            return s
+        else:
+            return "This section already exists"
 
-    def create_user(self, email, first_name, last_name, password,, phone, role, is_instructor, is_assistant, is_admin,
+    def create_user(self, email, first_name, last_name, password, phone, role, is_instructor, is_assistant, is_admin,
                     is_superuser):
         try:
             User.objects.get(email)
@@ -33,7 +44,8 @@ class Supervisor(User):
     @staticmethod
     def create_lab(lab_name, course, start_time, end_time, days):
         try:
-            Course.objects.get(course.name)
+            c = course.name
+            Course.objects.get(name=c)
         except Course.DoesNotExist:
             return "Cannot add lab to course that does not exist"
         else:
@@ -53,21 +65,21 @@ class Supervisor(User):
     @staticmethod
     def delete_lab(lab):
         try:
-            l = Lab.objects.get(lab.name)
+            lb = Lab.objects.get(lab.name)
         except Course.DoesNotExist:
             return "Cannot delete lab that does not exist"
         else:
-            l.delete()
+            lb.delete()
 
     @staticmethod
     def assign_assistant(self, lab, assistant):
         try:
             ta = User.objects.get(email=assistant.email)
-            l = Lab.objects.get(lab.lab_name)
+            lb = Lab.objects.get(lab.lab_name)
         except User.DoesNotExist and Lab.DoesNotExist:
             return "Lab and TA must both exist"
         else:
-            l.assistant = models.ForeignKey(ta, on_delete=models.CASCADE)
+            lb.assistant = models.ForeignKey(ta, on_delete=models.CASCADE)
 
     @staticmethod
     def assign_instructor(self, section, instructor):
@@ -78,14 +90,3 @@ class Supervisor(User):
             return "Lab and TA must both exist"
         else:
             sec.instructor = models.ForeignKey(instr, on_delete=models.CASCADE)
-
-
-
-
-
-
-
-
-
-
-
