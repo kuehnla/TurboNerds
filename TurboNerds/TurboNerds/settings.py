@@ -108,7 +108,10 @@ LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'America/Chicago'
 
-USE_I18N = True
+TIME_INPUT_FORMATS = ('%I:%M %p',)
+
+USE_I18N = False
+USE_L10N = False
 
 USE_TZ = True
 

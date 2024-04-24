@@ -1,0 +1,56 @@
+@font-face {
+    font-family: "Poppins-Regular";
+    src: url("fonts/Poppins-Regular.ttf") format("truetype");
+}
+
+body {
+    font-family: "Poppins-Regular", serif;
+}
+
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+h1 {
+    text-align: center;
+    padding: 16px 0 16px 0;
+}
+
+.card {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    margin-bottom: 24px;
+    padding: 8px;
+    background-color: #f2f2f2;
+    box-shadow: 0 0 10px rgb(222, 222, 222);
+    width: 400px;
+}
+
+.profile_img {
+    grid-column: 1 / 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid grey;
+}
+
+.info {
+    grid-column: 2 / 3;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    justify-content: flex-start;
+    padding-left: 12px;
+}
+
+p, h5 {
+    margin: 0;
+}
+
+.name, .email,
+.phone, .role {
+    display: flex;
+    gap: 6px;
+}

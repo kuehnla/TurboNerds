@@ -17,14 +17,20 @@ class HomeViews:
     def ta_home(request):
         if not request.user.is_authenticated:
             return redirect('login')
-        return render(request, 'home.html')
+
+        labs = request.user.lab_set.all()
+
+        return render(request, 'home.html', {'labs': labs, 'user': request.user})
+
     def instructor_home(request):
         if not request.user.is_authenticated:
             return redirect('login')
         name = "Instructor"
         return render(request, 'instructor_home.html', {"name": name})
+
     def supervisor_home(request):
         return render(request, 'supervisor_home.html', {})
+
 
 class CourseInformation:
     from django.db.models import Prefetch
@@ -43,6 +49,7 @@ class CourseInformation:
     def assign_Tas(request,email):
         if not request.user.is_authenticated:
             return redirect('login')
+        
         instructor = User.objects.get(email=email)
         course = Section.objects.filter(instructor=instructor).values_list('course', flat=True).first()
         if not course:
@@ -71,11 +78,10 @@ class CourseInformation:
         return render(request, 'course/user_information.html', {'users': users})
 
 
-
 class ProfileModification:
     def register(request):
-
     #submitted = False
+
         if request.method == "POST":
             form = RegistrationForm(request.POST)
 
@@ -85,18 +91,16 @@ class ProfileModification:
                 role = form.cleaned_data['role']
 
                 if role == 'Instructor':
-                    user = User.objects.filter(email=email).update( is_instructor=True, is_admin=False,
-                                           is_assistant=False)
+                    user = User.objects.filter(email=email).update(is_instructor=True, is_admin=False,
+                                                                   is_assistant=False)
 
                 elif role == 'Supervisor':
                     user = User.objects.filter(email=email).update(is_instructor=False, is_admin=True,
-                                           is_assistant=False)
+                                                                   is_assistant=False)
 
                 else:
-                    user = User.objects.filter(email=email).update( is_instructor=False, is_admin=False,
-                                           is_assistant=True)
-
-
+                    user = User.objects.filter(email=email).update(is_instructor=False, is_admin=False,
+                                                                   is_assistant=True)
 
                 return redirect('supervisor_home')
         else:
@@ -108,6 +112,7 @@ class ProfileModification:
     def edit_profile(request,email):
         if not request.user.is_authenticated:
             return redirect('login')
+
         if request.method == 'POST':
             user = User.objects.get(email=email)
             form = EditProfileForm(request.POST, instance=user)
@@ -118,13 +123,14 @@ class ProfileModification:
                 user.phone = request.POST['phone']
 
                 User.objects.filter(email=email).update(first_name=user.first_name
-                                                    , last_name=user.last_name, email=user.email, phone=user.phone)
+                                                        , last_name=user.last_name, email=user.email, phone=user.phone)
                 return redirect('instructor_home')
         else:
 
             user = User.objects.get(email=email)
             form = EditProfileForm(instance=user)
-            return render(request, 'accounts/edit_profile.html', {'login':user,'form': form})
+            return render(request, 'accounts/edit_profile.html', {'login': user, 'form': form})
+
 
 class Logins:
 
@@ -134,6 +140,7 @@ class Logins:
 
 
 from django.http import HttpResponseRedirect
+
 
 class CustomLoginView(LoginView):
     def get_success_url(self):

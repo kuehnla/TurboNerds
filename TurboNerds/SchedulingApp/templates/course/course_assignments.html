@@ -1,41 +1,65 @@
 {% extends 'base.html' %}
 
+{% load static %}
+
 {% block content %}
-<html lang="en">
-    <head>
+
+  {% block css %}
+    <link rel="stylesheet" href={% static 'course_info.css' %}>
+  {% endblock %}
+
+  <html lang="en">
+  <head>
     <meta charset="UTF-8">
     <title>Courses with Labs and Sections</title>
-</head>
-<body>
-    <h1>Course Information</h1>
-    {% for course in courses %}
-        <h2>{{ course.name }} ({{ course.department }} {{ course.number }})</h2>
-        <h3>Labs:</h3>
-        <ul>
-            {% for lab in course.lab_set.all %}
-                <blockquote><li>Assistant: {{ lab.assistant.get_full_name }}</li>
-                <li>Start Time: {{ lab.start_time }}</li>
-                <li>End Time: {{ lab.end_time }}</li>
-                <li>Days: {{ lab.days }}</li>
-                </blockquote> 
-            {% endfor %}
-               
-        </ul>
-        <h3>Sections:</h3>
-        <ul>
-            {% for section in course.section_set.all %}
-                <blockquote><li>Instructor: {{ section.instructor.get_full_name }}</li>
-                <li>Start Date: {{ section.start_date }}</li>
-                <li>End Date: {{ section.end_date }}</li>
-                <li>Start Time: {{ section.start_time }}</li>
-                <li>End Time: {{ section.end_time }}</li>
-                <li>Days: {{ section.days }}</li>
-                </blockquote>
-            {% endfor %}
-                
-        </ul>
-        <br/>
-    {% endfor %}
+  </head>
+  <body>
+
+  <h1>Course Information</h1>
+  <div class="container">
+  {% for course in courses %}
+
+    <h2>{{ course.name }} ({{ course.department }} {{ course.number }})</h2>
+    <br>
+    <h3>Labs:</h3>
+    <div class="table_container">
+      <table>
+        <tr>
+          <th>TA</th>
+          <th>Lab section</th>
+          <th>Times</th>
+          <th>Days</th>
+        </tr>
+        {% for lab in course.lab_set.all %}
+          <tr>
+            <td>{{ lab.assistant.first_name }} {{ lab.assistant.last_name }}</td>
+            <td>{{ lab.lab_name }}</td>
+            <td>{{ lab.start_time }} - {{ lab.end_time }}</td>
+            <td>{{ lab.days }}</td>
+          </tr>
+        {% endfor %}
+      </table>
+    
+    <h3>Sections:</h3>
+
+    <table>
+      <tr>
+        <th>Instructor</th>
+        <th>Start/End</th>
+        <th>Times</th>
+        <th>Days</th>
+      </tr>
+      {% for section in course.section_set.all %}
+        <td>{{ section.instructor.get_full_name }}</td>
+        <td>{{ section.start_date }} - {{ section.end_date }}</td>
+        <td>Start Time: {{ section.start_time }} - {{ section.end_time }}</td>
+        <td>Days: {{ section.days }}</td>
+        </table>
+      {% endfor %}
+    </div>
+
+  {% endfor %}
+  </div>
 {% endblock %}
 
 

@@ -1,26 +1,53 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
-<div style="text-align: center;">
-    <meta charset="UTF-8">
+  {% block css %}
+    <link rel="stylesheet" href={% static 'edit_profile.css' %}>
+  {% endblock %}
 
+  <div class="container">
 
     <h1>Edit Profile</h1>
-<body>
-    
-        {% for form in forms %}
-            {{ form }}
-        {% endfor %}
-   
-    <form method="post" action ="{% url 'edit_profile' login %}">
 
-        {% csrf_token %}
-        {{ form.as_p }}
-        <input type="submit" value="Update" class="btn btn-secondary">
+    {% if forms %}
+
+      {% if form.errors %}
+        <ul class="errors">
+          {% for error in form.errors %}
+            <li>{{ error }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endif %}
+
+  <div class="form-container">
+    <form method="post" action="{% url 'edit_profile' login %}">
+      {% csrf_token %}
+      <div class="field">
+        {{ form.first_name.errors }}
+        <label for="{{ form.first_name.id_for_label }}">First Name:</label>
+        {{ form.first_name }}
+      </div>
+      <div class="field">
+        {{ form.last_name.errors }}
+        <label for="{{ form.last_name.id_for_label }}">Last Name:</label>
+        {{ form.last_name }}
+      </div>
+      <div class="field">
+        {{ form.email.errors }}
+        <label for="{{ form.email.id_for_label }}">Email:</label>
+        {{ form.email }}
+      </div>
+      <div class="field">
+        {{ form.phone.errors }}
+        <label for="{{ form.phone.id_for_label }}">Phone:</label>
+        {{ form.phone }}
+      </div>
+      <input type="submit" value="Update" class="btn btn-secondary" style="margin-top: 4px">
     </form>
-
-</body>
-</div>
+  </div>
+  </div>
 {% endblock %}
 
 
