@@ -20,7 +20,7 @@ class HomeViews:
 
         labs = request.user.lab_set.all()
 
-        return render(request, 'home.html', {'labs': labs, 'user': request.user,})
+        return render(request, 'home.html', {'labs': labs, 'user': request.user})
 
     def instructor_home(request):
         name = "Instructor"

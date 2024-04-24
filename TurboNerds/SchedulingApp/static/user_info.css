@@ -1,3 +1,12 @@
+@font-face {
+    font-family: "Poppins-Regular";
+    src: url("fonts/Poppins-Regular.ttf") format("truetype");
+}
+
+body {
+    font-family: "Poppins-Regular", serif;
+}
+
 .container {
     display: flex;
     flex-wrap: wrap;
