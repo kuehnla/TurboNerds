@@ -87,8 +87,8 @@ class Lab(models.Model):
     )
     lab_name = models.CharField(max_length=3, default="lab 1")
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
-    start_time = models.DateTimeField()
-    end_time = models.DateTimeField()
+    start_time = models.TimeField()
+    end_time = models.TimeField()
     days = models.CharField(max_length=10, default="Mo We")
 
     def __str__(self):

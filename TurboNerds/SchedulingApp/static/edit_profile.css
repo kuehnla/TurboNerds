@@ -1,0 +1,32 @@
+@font-face {
+    font-family: "Poppins-Regular";
+    src: url("fonts/Poppins-Regular.ttf") format("truetype");
+}
+
+body {
+    font-family: "Poppins-Regular", serif;
+}
+
+.container {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+h1 {
+    padding: 12px 0 12px 0;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    background-color: #f6f6f6;
+    padding: 16px 64px 16px 64px;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+}
