@@ -1,16 +1,7 @@
 {% extends 'base.html' %}
-
-{#{% block head %}#}
-{#  {% load static %}#}
-{#  <link rel="stylesheet" href={% static 'home.css' %}>#}
-{#  <title>TA Home</title>#}
-{#{% endblock %}#}
-
 {% load static %}
 
 {% block content %}
-
-
   {% block css %}
     <link rel="stylesheet" href={% static 'home.css' %}>
   {% endblock %}
@@ -19,6 +10,9 @@
     <h1>Welcome {{ user.first_name }}</h1>
     <h2>Your Labs</h2>
     <div class="card_container">
+    {% if not labs %}
+      <p>No labs at this time</p>
+    {% else %}
       {% for lab in labs %}
         <div class="lab_card">
           <h3>{{ lab.course.department }}  {{ lab.course.number }}</h3>
@@ -27,6 +21,7 @@
           <p>Days: {{ lab.days }}</p>
         </div>
       {% endfor %}
+    {% endif %}
     </div>
   </div>
 {% endblock %}
