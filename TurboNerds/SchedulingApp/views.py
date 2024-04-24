@@ -49,12 +49,11 @@ class CourseInformation:
     def assign_Tas(request,email):
         if not request.user.is_authenticated:
             return redirect('login')
-        
         instructor = User.objects.get(email=email)
         course = Section.objects.filter(instructor=instructor).values_list('course', flat=True).first()
         if not course:
             messages.error(request, 'Instructor not associated with any courses.')
-            return redirect('home')
+            return redirect('instructor_home')
         if request.method == 'POST':
             form = TaAssignment(course, request.POST)
             if form.is_valid():
@@ -74,14 +73,16 @@ class CourseInformation:
         if not request.user.is_authenticated:
             return redirect('login')
         users = User.objects.all()
-
+        if not request.user.is_authenticated:
+            return redirect('login')
         return render(request, 'course/user_information.html', {'users': users})
 
 
 class ProfileModification:
     def register(request):
     #submitted = False
-
+        if not request.user.is_authenticated:
+            return redirect('login')
         if request.method == "POST":
             form = RegistrationForm(request.POST)
 
@@ -112,7 +113,6 @@ class ProfileModification:
     def edit_profile(request,email):
         if not request.user.is_authenticated:
             return redirect('login')
-
         if request.method == 'POST':
             user = User.objects.get(email=email)
             form = EditProfileForm(request.POST, instance=user)
