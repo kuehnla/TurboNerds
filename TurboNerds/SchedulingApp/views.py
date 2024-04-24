@@ -30,6 +30,8 @@ class CourseInformation:
     from .models import Course, Lab, Section
 
     def course_assignment(request):
+        if not request.user.is_authenticated:
+            return redirect('login')
         courses = Course.objects.prefetch_related(
             Prefetch('lab_set', queryset=Lab.objects.order_by('start_time')),
             Prefetch('section_set', queryset=Section.objects.order_by('start_date'))
@@ -37,11 +39,13 @@ class CourseInformation:
         return render(request, 'course/course_assignments.html', {'courses': courses})
 
     def assign_Tas(request,email):
+        if not request.user.is_authenticated:
+            return redirect('login')
         instructor = User.objects.get(email=email)
         course = Section.objects.filter(instructor=instructor).values_list('course', flat=True).first()
         if not course:
             messages.error(request, 'Instructor not associated with any courses.')
-            return redirect('home')
+            return redirect('instructor_home')
         if request.method == 'POST':
             form = TaAssignment(course, request.POST)
             if form.is_valid():
@@ -56,6 +60,8 @@ class CourseInformation:
         return render(request, 'course/ta_assignments.html', {'form': form})
 
     def read_information(request):
+        if not request.user.is_authenticated:
+            return redirect('login')
         users = User.objects.all()
         if not request.user.is_authenticated:
             return redirect('login')
@@ -66,6 +72,8 @@ class CourseInformation:
 class ProfileModification:
     def register(request):
     #submitted = False
+        if not request.user.is_authenticated:
+            return redirect('login')
         if request.method == "POST":
             form = RegistrationForm(request.POST)
 
@@ -96,6 +104,8 @@ class ProfileModification:
 
 
     def edit_profile(request,email):
+        if not request.user.is_authenticated:
+            return redirect('login')
         if request.method == 'POST':
             user = User.objects.get(email=email)
             form = EditProfileForm(request.POST, instance=user)
