@@ -19,6 +19,8 @@ class HomeViews:
             return redirect('login')
         return render(request, 'home.html')
     def instructor_home(request):
+        if not request.user.is_authenticated:
+            return redirect('login')
         name = "Instructor"
         return render(request, 'instructor_home.html', {"name": name})
     def supervisor_home(request):
@@ -30,6 +32,8 @@ class CourseInformation:
     from .models import Course, Lab, Section
 
     def course_assignment(request):
+        if not request.user.is_authenticated:
+            return redirect('login')
         courses = Course.objects.prefetch_related(
             Prefetch('lab_set', queryset=Lab.objects.order_by('start_time')),
             Prefetch('section_set', queryset=Section.objects.order_by('start_date'))
@@ -37,6 +41,8 @@ class CourseInformation:
         return render(request, 'course/course_assignments.html', {'courses': courses})
 
     def assign_Tas(request,email):
+        if not request.user.is_authenticated:
+            return redirect('login')
         instructor = User.objects.get(email=email)
         course = Section.objects.filter(instructor=instructor).values_list('course', flat=True).first()
         if not course:
@@ -50,12 +56,16 @@ class CourseInformation:
                 lab.assistant = ta
                 lab.save()
                 messages.success(request, 'TA successfully assigned to lab.')
-                return redirect('home')
+                return redirect('course_assignment')
         else:
             form = TaAssignment(course)
         return render(request, 'course/ta_assignments.html', {'form': form})
 
+
+
     def read_information(request):
+        if not request.user.is_authenticated:
+            return redirect('login')
         users = User.objects.all()
 
         return render(request, 'course/user_information.html', {'users': users})
@@ -64,6 +74,7 @@ class CourseInformation:
 
 class ProfileModification:
     def register(request):
+
     #submitted = False
         if request.method == "POST":
             form = RegistrationForm(request.POST)
@@ -95,6 +106,8 @@ class ProfileModification:
 
 
     def edit_profile(request,email):
+        if not request.user.is_authenticated:
+            return redirect('login')
         if request.method == 'POST':
             user = User.objects.get(email=email)
             form = EditProfileForm(request.POST, instance=user)
