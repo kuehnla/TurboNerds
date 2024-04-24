@@ -27,6 +27,20 @@ class EditProfileForm(ModelForm):
         model = get_user_model()
         fields = ('first_name', 'last_name', 'email', 'phone')
 
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        if email != self.instance.email:
+            if User.objects.filter(email=email).exists():
+                raise forms.ValidationError("This email address is already in use.")
+        return email
+
+    def clean_phone(self):
+        phone = self.cleaned_data['phone']
+        if phone != self.instance.phone:
+            if User.objects.filter(phone=phone).exists():
+                raise forms.ValidationError("This phone number is already in use.")
+        return phone
+
 class TaAssignment(forms.ModelForm):
     ta = forms.ModelChoiceField(queryset=User.objects.filter(is_assistant=True))
     lab = forms.ModelChoiceField(queryset=Lab.objects.all())

@@ -7,11 +7,11 @@
 
     <h1>Edit Profile</h1>
 <body>
-    {%  if forms %}
+    
         {% for form in forms %}
             {{ form }}
         {% endfor %}
-    {% endif %}
+   
     <form method="post" action ="{% url 'edit_profile' login %}">
 
         {% csrf_token %}
