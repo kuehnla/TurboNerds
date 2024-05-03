@@ -12,8 +12,8 @@ class Users:
             return render(request, 'ta_home.html', {'labs': labs, 'user': request.user})
 
         if request.user.is_instructor:
-            name = "Instructor"
-            return render(request, 'instructor_home.html', {"name": name})
+            sections = request.user.section_set.all()
+            return render(request, 'instructor_home.html', {'sections': sections, 'user': request.user})
 
         if request.user.is_admin:
             return render(request, 'supervisor_home.html', {})
