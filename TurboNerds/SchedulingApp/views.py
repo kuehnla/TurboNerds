@@ -10,26 +10,14 @@ from django.contrib.auth import views as auth_views
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.views import LoginView
 from django.urls import reverse_lazy
+from django.http import HttpResponseRedirect
+from .default_user import Users
 
 
-# Create your views here.
 class HomeViews:
-    def ta_home(request):
-        if not request.user.is_authenticated:
-            return redirect('login')
 
-        labs = request.user.lab_set.all()
-
-        return render(request, 'home.html', {'labs': labs, 'user': request.user})
-
-    def instructor_home(request):
-        if not request.user.is_authenticated:
-            return redirect('login')
-        name = "Instructor"
-        return render(request, 'instructor_home.html', {"name": name})
-
-    def supervisor_home(request):
-        return render(request, 'supervisor_home.html', {})
+    def home(request):
+        return Users.display_home(request)
 
 
 class CourseInformation:
@@ -53,7 +41,8 @@ class CourseInformation:
         course = Section.objects.filter(instructor=instructor).values_list('course', flat=True).first()
         if not course:
             messages.error(request, 'Instructor not associated with any courses.')
-            return redirect('instructor_home')
+            # return redirect('instructor_home')
+            return redirect('home')
         if request.method == 'POST':
             form = TaAssignment(course, request.POST)
             if form.is_valid():
@@ -66,8 +55,6 @@ class CourseInformation:
         else:
             form = TaAssignment(course)
         return render(request, 'course/ta_assignments.html', {'form': form})
-
-
 
     def read_information(request):
         if not request.user.is_authenticated:
@@ -103,7 +90,8 @@ class ProfileModification:
                     user = User.objects.filter(email=email).update(is_instructor=False, is_admin=False,
                                                                    is_assistant=True)
 
-                return redirect('supervisor_home')
+                # return redirect('supervisor_home')
+                return redirect('home')
         else:
             form = RegistrationForm()
 
@@ -124,7 +112,8 @@ class ProfileModification:
 
                 User.objects.filter(email=email).update(first_name=user.first_name
                                                         , last_name=user.last_name, email=user.email, phone=user.phone)
-                return redirect('instructor_home')
+                # return redirect('instructor_home')
+                return redirect('home')
         else:
 
             user = User.objects.get(email=email)
@@ -136,10 +125,7 @@ class Logins:
 
     def logout_user(request):
         logout(request)
-        return redirect('home')
-
-
-from django.http import HttpResponseRedirect
+        return redirect('login')
 
 
 class CustomLoginView(LoginView):
@@ -150,11 +136,7 @@ class CustomLoginView(LoginView):
         # Assuming you have a profile or a field in your user model indicating the role
         # You can replace this logic with your actual logic to determine the user's role
         if user.is_authenticated:
-            if user.is_instructor:
-                return reverse_lazy('instructor_home')
-            elif user.is_admin:
-                return reverse_lazy('supervisor_home')
-            elif user.is_assistant:
-                return reverse_lazy('home')
+            return reverse_lazy('home')
+
         # If the user's role is not defined, redirect to some default URL
         return reverse_lazy('default_home')  # You need to define this URL in your urls.py
