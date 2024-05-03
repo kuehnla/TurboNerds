@@ -25,7 +25,7 @@ class TestViews(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertTemplateUsed(response, 'course/ta_assignments.html')
 
-    def test_assign_Tas__POST_add_ta(self):
+    def test_assign_Tas_POST_add_ta(self):
         Lab.objects.create(assistant=self.test_TA2, lab_name='Test Lab', course=self.test_course,
                            start_time='10:00:00', end_time='11:00:00', days='Mo We')
 
