@@ -1,5 +1,5 @@
 from django.db import models
-from .models import User, Course, ROLES, MyUserManager, Lab, Section
+from .models import *
 
 
 class Supervisor(User):
@@ -7,27 +7,25 @@ class Supervisor(User):
         super().__init__(self, *args, **kwargs)
         self.role = models.CharField(max_length=20, choices=ROLES.choices, default="Supervisor")
         self.is_admin = True
-        self.id = 1
 
     @staticmethod
     def create_course(department, number, name, semester):
         try:
-            Course.objects.filter(department=department, number=number, semester=semester, name=name)
+            Course.objects.get(department=department, number=number, semester=semester, name=name)
         except Course.DoesNotExist:
-            course = Course(department=department, number=number, name=name, semester=semester)
-            course.save()
+            course = Course.objects.create(department=department, number=number, name=name, semester=semester)
             return course
         else:
             return "This course already exists"
 
     @staticmethod
     def create_section(course, instructor, section_name, start_date, end_date, start_time, end_time, days):
-        try:
-            s = Section.objects.filter(section_name=section_name, start_time=start_time, end_time=end_time)
-        except Section.DoesNotExist:
-            s = Section(course, instructor, section_name, start_date, end_date, start_time, end_time, days)
-            s.save()
-            return s
+        x = Section.objects.filter(course=course, instructor=instructor).first()
+        if x is None:
+            x = Section.objects.create(course=course, instructor=instructor, section_name=section_name,
+                                       start_date=start_date, end_date=end_date, start_time=start_time,
+                                       end_time=end_time, days=days)
+            return x
         else:
             return "This section already exists"
 
@@ -42,31 +40,47 @@ class Supervisor(User):
             return "User with given email already exists"
 
     @staticmethod
-    def create_lab(lab_name, course, start_time, end_time, days):
+    def create_lab(assistant, lab_name, course, start_time, end_time, days):
         try:
             c = course.name
             Course.objects.get(name=c)
+            Lab.objects.get(lab_name=lab_name)
         except Course.DoesNotExist:
             return "Cannot add lab to course that does not exist"
-        else:
-            lab = Lab(lab_name, course, start_time, end_time, days)
-            lab.save()
+        except Lab.DoesNotExist:
+            lab = Lab.objects.create(assistant=assistant, lab_name=lab_name, course=course, start_time=start_time,
+                                     end_time=end_time,
+                                     days=days)
             return lab
+        else:
+            return "This lab already exists"
 
-    @staticmethod
-    def delete_course(course):
+    def delete_course(self, course):
+        if not (self.is_admin or self.is_superuser):
+            return "No permission to delete course"
         try:
-            c = Course.objects.get(course.name)
+            c = Course.objects.get(name=course.name)
         except Course.DoesNotExist:
             return "Cannot delete course that does not exist"
         else:
             c.delete()
 
-    @staticmethod
-    def delete_lab(lab):
+    def delete_section(self, section):
+        if not (self.is_admin or self.is_superuser):
+            return "No permission to delete section"
         try:
-            lb = Lab.objects.get(lab.name)
-        except Course.DoesNotExist:
+            s = Section.objects.get(section_name=section.section_name)
+        except Section.DoesNotExist:
+            return "Cannot delete section that does not exist"
+        else:
+            s.delete()
+
+    def delete_lab(self, lab):
+        if not (self.is_admin or self.is_superuser):
+            return "No permission to delete lab"
+        try:
+            lb = Lab.objects.get(lab_name=lab.lab_name)
+        except Lab.DoesNotExist:
             return "Cannot delete lab that does not exist"
         else:
             lb.delete()
