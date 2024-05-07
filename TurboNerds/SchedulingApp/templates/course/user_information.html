@@ -22,10 +22,16 @@
             <img src={% static 'assets/mail.svg' %} alt="email" width="25px">
             <a href="https://outlook.office.com/mail"> {{ user.email }}</a>
           </div>
+            {% if member.is_admin %}
           <div class="phone">
+              
             <img src={% static 'assets/call.svg' %} alt="phone" width="25px">
+              
             <p>{{ user.phone }}</p>
+              
           </div>
+        {% endif %}
+            
           <div class="role">
           <img src={% static 'assets/star.svg' %} alt="role" width="25px">
             {% if user.is_assistant %}

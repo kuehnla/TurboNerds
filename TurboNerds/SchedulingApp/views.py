@@ -56,13 +56,14 @@ class CourseInformation:
             form = TaAssignment(course)
         return render(request, 'course/ta_assignments.html', {'form': form})
 
-    def read_information(request):
+    def read_information(request,email):
         if not request.user.is_authenticated:
             return redirect('login')
         users = User.objects.all()
         if not request.user.is_authenticated:
             return redirect('login')
-        return render(request, 'course/user_information.html', {'users': users})
+        user = User.objects.get(email=email)
+        return render(request, 'course/user_information.html', {'users': users, 'member': user})
 
 
 class ProfileModification:
@@ -133,10 +134,9 @@ class CustomLoginView(LoginView):
         # Get the user object after successful login
         user = self.request.user
 
-        # Assuming you have a profile or a field in your user model indicating the role
-        # You can replace this logic with your actual logic to determine the user's role
+
         if user.is_authenticated:
             return reverse_lazy('home')
 
         # If the user's role is not defined, redirect to some default URL
-        return reverse_lazy('default_home')  # You need to define this URL in your urls.py
+        return reverse_lazy('default_home')
