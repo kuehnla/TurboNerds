@@ -1,6 +1,27 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
-<html lang="en">
-    <h1>Hello {{ name }}!</h1>
+  {% block css %}
+    <link rel="stylesheet" href={% static 'home.css' %}>
+  {% endblock %}
+
+  <div class="container">
+    <h1>Welcome {{ user.first_name }}</h1>
+    <h2>Your Courses</h2>
+    <div class="card_container">
+    {% if not sections %}
+      <p>No labs at this time</p>
+    {% else %}
+      {% for section in sections %}
+        <div class="lab_card">
+          <h3>{{ section.course.department }}  {{ section.course.number }}</h3>
+          <h5>Course section: {{ section.section_name }}</h5>
+          <p>{{ section.start_time }} - {{ section.end_time }}</p>
+          <p>Days: {{ section.days }}</p>
+        </div>
+      {% endfor %}
+    {% endif %}
+    </div>
+  </div>
 {% endblock %}
