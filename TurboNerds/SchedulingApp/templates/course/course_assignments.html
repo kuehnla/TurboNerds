@@ -53,15 +53,16 @@
         <th>Days</th>
       </tr>
       {% for section in course.section_set.all %}
-        <td>{{ section.instructor.get_full_name }}</td>
-        <td>{{ section.start_date }} - {{ section.end_date }}</td>
-        <td>Start Time: {{ section.start_time }} - {{ section.end_time }}</td>
-        <td>Days: {{ section.days }}</td>
-        </table>
+        <tr>
+          <td>{{ section.instructor.get_full_name }}</td>
+          <td>{{ section.start_date }} - {{ section.end_date }}</td>
+          <td>Start Time: {{ section.start_time }} - {{ section.end_time }}</td>
+          <td>Days: {{ section.days }}</td>
+        </tr>
       {% endfor %}
-    </div>
+    </table>
+      </div>
     {% endif %}
-
     </div>
   {% endfor %}
   {% else %}
