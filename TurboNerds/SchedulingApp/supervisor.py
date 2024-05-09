@@ -32,7 +32,7 @@ class Supervisor(User):
     def create_user(self, email, first_name, last_name, password, phone, role, is_instructor, is_assistant, is_admin,
                     is_superuser):
         try:
-            User.objects.get(email)
+            User.objects.filter(email=email).first()
         except User.DoesNotExist:
             return MyUserManager.create_user(self.objects, email, password, first_name, last_name, phone, is_instructor,
                                              is_assistant, is_admin, is_superuser)
