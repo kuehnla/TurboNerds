@@ -49,8 +49,13 @@ p, h5 {
     margin: 0;
 }
 
+a {
+    text-decoration: none;
+}
+
 .name, .email,
-.phone, .role {
+.phone, .role,
+.assignments {
     display: flex;
     gap: 6px;
 }

@@ -72,3 +72,10 @@ class TestSupervisor(TestCase):
                                                      semester='Fall'), "This course already exists")
         self.assertEqual(Supervisor.create_course(department='CS', number=361, name='Intro to Software Engineering',
                                                   semester='Spring'), "This course already exists")
+
+    def test_userCreate(self):
+        supervisor = Supervisor()
+        supervisor.create_user(email="email@uwm.edu", first_name="Teaching", last_name="Assistant",
+                               password="Turbo123", phone="2222222222", role="Admin", is_instructor=False,
+                               is_assistant=False, is_admin=True, is_superuser=False)
+        self.assertIsNotNone(User.objects.filter(last_name="Assistant").first(), "user should exist but doesn't")
