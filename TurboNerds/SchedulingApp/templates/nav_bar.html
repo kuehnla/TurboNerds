@@ -12,7 +12,7 @@
         <a class="nav-link" href="{% url 'edit_profile' request.user.email %}">Edit Information</a>
       </li>  
       <li class="nav-item">
-        <a class="nav-link" href="{% url 'user_information' %}">User Information</a>
+        <a class="nav-link" href="{% url 'user_information' request.user.email %}">User Information</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="{% url 'course_assignment' %}">Course Information</a>
