@@ -19,6 +19,9 @@ class HomeViews:
     def home(request):
         return Users.display_home(request)
 
+    def otherhome(request, email):
+        return Users.display_other(request, email)
+
 
 class CourseInformation:
     from django.db.models import Prefetch
@@ -34,7 +37,7 @@ class CourseInformation:
         ).all()
         return render(request, 'course/course_assignments.html', {'courses': courses})
 
-    def assign_Tas(request,email):
+    def assign_Tas(request, email):
         if not request.user.is_authenticated:
             return redirect('login')
         instructor = User.objects.get(email=email)
@@ -56,7 +59,7 @@ class CourseInformation:
             form = TaAssignment(course)
         return render(request, 'course/ta_assignments.html', {'form': form})
 
-    def read_information(request,email):
+    def read_information(request, email):
         if not request.user.is_authenticated:
             return redirect('login')
         users = User.objects.all()
@@ -68,7 +71,7 @@ class CourseInformation:
 
 class ProfileModification:
     def register(request):
-    #submitted = False
+        # submitted = False
         if not request.user.is_authenticated:
             return redirect('login')
         if request.method == "POST":
@@ -98,8 +101,7 @@ class ProfileModification:
 
         return render(request, 'accounts/register.html', {'form': form})
 
-
-    def edit_profile(request,email):
+    def edit_profile(request, email):
         if not request.user.is_authenticated:
             return redirect('login')
         if request.method == 'POST':
@@ -133,7 +135,6 @@ class CustomLoginView(LoginView):
     def get_success_url(self):
         # Get the user object after successful login
         user = self.request.user
-
 
         if user.is_authenticated:
             return reverse_lazy('home')
