@@ -7,8 +7,12 @@
   {% endblock %}
 
   <div class="container">
-    <h1>Welcome {{ user.first_name }}</h1>
-    <h2>Your Courses</h2>
+    <h1>Welcome {{ request.user.first_name }}</h1>
+    {% if request.user == user %}
+      <h2>Your Courses</h2>
+    {% else %}
+      <h2>Viewing section(s) for {{ user.first_name }} {{ user.last_name }}</h2>
+    {% endif %}
     <div class="card_container">
     {% if not sections %}
       <p>No labs at this time</p>

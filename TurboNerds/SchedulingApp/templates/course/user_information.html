@@ -19,22 +19,8 @@
             <h5>{{ user.get_full_name }}</h5>
               <button>Delete</button>
           </div>
-          <div class="email">
-            <img src={% static 'assets/mail.svg' %} alt="email" width="25px">
-            <a href="https://outlook.office.com/mail"> {{ user.email }}</a>
-          </div>
-            {% if member.is_admin %}
-          <div class="phone">
-              
-            <img src={% static 'assets/call.svg' %} alt="phone" width="25px">
-              
-            <p>{{ user.phone }}</p>
-              
-          </div>
-        {% endif %}
-            
           <div class="role">
-          <img src={% static 'assets/star.svg' %} alt="role" width="25px">
+            <img src={% static 'assets/star.svg' %} alt="role" width="25px">
             {% if user.is_assistant %}
               <p>TA</p>
             {% elif user.is_instructor %}
@@ -43,6 +29,26 @@
               <p>Supervisor</p>
             {% endif %}
           </div>
+          {% if member.is_admin %}
+            <div class="phone">
+
+              <img src={% static 'assets/call.svg' %} alt="phone" width="25px">
+
+              <p>{{ user.phone }}</p>
+
+            </div>
+          {% endif %}
+          <div class="email">
+            <img src={% static 'assets/mail.svg' %} alt="email" width="25px">
+            <a href="https://outlook.office.com/mail"> {{ user.email }}</a>
+          </div>
+
+          {% if user.is_instructor or user.is_assistant %}
+            <div class="assignments">
+              <img src={% static 'assets/assignments.svg' %} alt="assignments" width="25px">
+              <a href="/{{ user.email }}">Assignments</a>
+            </div>
+          {% endif %}
         </div>
       </div>
 

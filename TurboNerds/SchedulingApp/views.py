@@ -20,6 +20,9 @@ class HomeViews:
     def home(request):
         return Users.display_home(request)
 
+    def otherhome(request, email):
+        return Users.display_other(request, email)
+
 
 class CourseInformation:
     from django.db.models import Prefetch
@@ -69,16 +72,12 @@ class CourseInformation:
 
 class ProfileModification:
     def register(request):
-        #submitted = False
+        # submitted = False
         if not request.user.is_authenticated:
             return redirect('login')
 
         if request.method == "POST":
             form = RegistrationForm(request.POST)
-
-            # Supervisor.create_user(request, form.data['email'], form.data['first_name'], form.data['last_name'],
-            #                        form.data['password'], form.data['phone'], form.data['role'] == 'Instructor',
-            #                        form.data['role'] == 'Ta', form.data['role'] == 'Supervisor', False)
 
             if form.is_valid():
                 form.save()
@@ -138,6 +137,7 @@ class CustomLoginView(LoginView):
     def get_success_url(self):
         # Get the user object after successful login
         user = self.request.user
+
 
         if user.is_authenticated:
             return reverse_lazy('home')
