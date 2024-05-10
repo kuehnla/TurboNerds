@@ -59,3 +59,20 @@ a {
     display: flex;
     gap: 6px;
 }
+
+button.register {
+    display: block;
+    margin: auto auto 50px;
+}
+
+button {
+    display: flex;
+    justify-content: end;
+}
+
+.name > .btn-danger {
+    /*background-color: green;*/
+    /*border: green;*/
+    margin-left: auto;
+    text-align: center;
+}

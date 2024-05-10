@@ -17,7 +17,9 @@
           <div class="name">
             <img src={% static 'assets/accessibility.svg' %} alt="dude" width="25px">
             <h5>{{ user.get_full_name }}</h5>
-              <button>Delete</button>
+             {% if member.is_admin %} 
+                <a class="btn btn-danger" href="/delete/{{ user.email }}">Delete</a>
+             {% endif %}
           </div>
           <div class="role">
             <img src={% static 'assets/star.svg' %} alt="role" width="25px">
@@ -51,11 +53,13 @@
           {% endif %}
         </div>
       </div>
-
-
-
     {% endfor %}
-  </div>
 
+  </div>
+    {% if member.is_admin %}
+        <a href="/register">
+            <button class="register">Register New Account</button>
+        </a>
+    {% endif %}
 {% endblock %}
 

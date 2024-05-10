@@ -1,5 +1,4 @@
 from django.shortcuts import render, redirect
-
 from .forms import RegistrationForm, EditProfileForm, TaAssignment
 from .models import User, Course, Section, Lab
 from django.db.models import Prefetch
@@ -25,9 +24,6 @@ class HomeViews:
 
 
 class CourseInformation:
-    from django.db.models import Prefetch
-    from django.shortcuts import render
-    from .models import Course, Lab, Section
 
     def course_assignment(request):
         if not request.user.is_authenticated:
@@ -43,9 +39,8 @@ class CourseInformation:
             return redirect('login')
         instructor = User.objects.get(email=email)
         course = Section.objects.filter(instructor=instructor).values_list('course', flat=True).first()
-        if not course:
+        if not course and not instructor.is_admin:
             messages.error(request, 'Instructor not associated with any courses.')
-            # return redirect('instructor_home')
             return redirect('home')
         if request.method == 'POST':
             form = TaAssignment(course, request.POST)
@@ -64,8 +59,6 @@ class CourseInformation:
         if not request.user.is_authenticated:
             return redirect('login')
         users = User.objects.all()
-        if not request.user.is_authenticated:
-            return redirect('login')
         user = User.objects.get(email=email)
         return render(request, 'course/user_information.html', {'users': users, 'member': user})
 
@@ -81,22 +74,21 @@ class ProfileModification:
 
             if form.is_valid():
                 form.save()
-                email = form.cleaned_data['email']
+                new_email = form.cleaned_data['email']
                 role = form.cleaned_data['role']
 
                 if role == 'Instructor':
-                    user = User.objects.filter(email=email).update(is_instructor=True, is_admin=False,
+                    User.objects.filter(email=new_email).update(is_instructor=True, is_admin=False,
                                                                    is_assistant=False)
 
                 elif role == 'Supervisor':
-                    user = User.objects.filter(email=email).update(is_instructor=False, is_admin=True,
+                    User.objects.filter(email=new_email).update(is_instructor=False, is_admin=True,
                                                                    is_assistant=False)
 
                 else:
-                    user = User.objects.filter(email=email).update(is_instructor=False, is_admin=False,
+                    User.objects.filter(email=new_email).update(is_instructor=False, is_admin=False,
                                                                    is_assistant=True)
 
-                # return redirect('supervisor_home')
                 return redirect('home')
         else:
             form = RegistrationForm()
@@ -115,9 +107,8 @@ class ProfileModification:
                 user.email = request.POST['email']
                 user.phone = request.POST['phone']
 
-                User.objects.filter(email=email).update(first_name=user.first_name
-                                                        , last_name=user.last_name, email=user.email, phone=user.phone)
-                # return redirect('instructor_home')
+                User.objects.filter(email=email).update(first_name=user.first_name,
+                                                        last_name=user.last_name, email=user.email, phone=user.phone)
                 return redirect('home')
         else:
 
@@ -125,6 +116,10 @@ class ProfileModification:
             form = EditProfileForm(instance=user)
             return render(request, 'accounts/edit_profile.html', {'login': user, 'form': form})
 
+    def delete(request, email):
+        del_user = User.objects.get(email=email)
+        del_user.delete()
+        return redirect('home')
 
 class Logins:
 
@@ -144,3 +139,7 @@ class CustomLoginView(LoginView):
 
         # If the user's role is not defined, redirect to some default URL
         return reverse_lazy('default_home')
+
+class SuccessEdit:
+    def success(request):
+        pass
