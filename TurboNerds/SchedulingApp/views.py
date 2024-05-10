@@ -12,6 +12,7 @@ from django.contrib.auth.views import LoginView
 from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
 from .default_user import Users
+from .supervisor import *
 
 
 class HomeViews:
@@ -34,7 +35,7 @@ class CourseInformation:
         ).all()
         return render(request, 'course/course_assignments.html', {'courses': courses})
 
-    def assign_Tas(request,email):
+    def assign_Tas(request, email):
         if not request.user.is_authenticated:
             return redirect('login')
         instructor = User.objects.get(email=email)
@@ -56,7 +57,7 @@ class CourseInformation:
             form = TaAssignment(course)
         return render(request, 'course/ta_assignments.html', {'form': form})
 
-    def read_information(request,email):
+    def read_information(request, email):
         if not request.user.is_authenticated:
             return redirect('login')
         users = User.objects.all()
@@ -68,11 +69,16 @@ class CourseInformation:
 
 class ProfileModification:
     def register(request):
-    #submitted = False
+        #submitted = False
         if not request.user.is_authenticated:
             return redirect('login')
+
         if request.method == "POST":
             form = RegistrationForm(request.POST)
+
+            # Supervisor.create_user(request, form.data['email'], form.data['first_name'], form.data['last_name'],
+            #                        form.data['password'], form.data['phone'], form.data['role'] == 'Instructor',
+            #                        form.data['role'] == 'Ta', form.data['role'] == 'Supervisor', False)
 
             if form.is_valid():
                 form.save()
@@ -98,8 +104,7 @@ class ProfileModification:
 
         return render(request, 'accounts/register.html', {'form': form})
 
-
-    def edit_profile(request,email):
+    def edit_profile(request, email):
         if not request.user.is_authenticated:
             return redirect('login')
         if request.method == 'POST':
@@ -133,7 +138,6 @@ class CustomLoginView(LoginView):
     def get_success_url(self):
         # Get the user object after successful login
         user = self.request.user
-
 
         if user.is_authenticated:
             return reverse_lazy('home')
