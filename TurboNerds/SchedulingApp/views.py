@@ -12,6 +12,7 @@ from django.contrib.auth.views import LoginView
 from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
 from .default_user import Users
+from .supervisor import *
 
 
 class HomeViews:
@@ -74,6 +75,7 @@ class ProfileModification:
         # submitted = False
         if not request.user.is_authenticated:
             return redirect('login')
+
         if request.method == "POST":
             form = RegistrationForm(request.POST)
 
@@ -135,6 +137,7 @@ class CustomLoginView(LoginView):
     def get_success_url(self):
         # Get the user object after successful login
         user = self.request.user
+
 
         if user.is_authenticated:
             return reverse_lazy('home')

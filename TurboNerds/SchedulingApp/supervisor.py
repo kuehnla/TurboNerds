@@ -29,7 +29,7 @@ class Supervisor(User):
         else:
             return "This section already exists"
 
-    def create_user(self, email, first_name, last_name, password, phone, role, is_instructor, is_assistant, is_admin,
+    def create_user(self, email, first_name, last_name, password, phone, is_instructor, is_assistant, is_admin,
                     is_superuser):
         try:
             User.objects.filter(email=email).first()
