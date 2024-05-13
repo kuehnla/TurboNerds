@@ -19,10 +19,11 @@
     {% else %}
       {% for section in sections %}
         <div class="lab_card">
-          <h3>{{ section.course.department }}  {{ section.course.number }}</h3>
-          <h5>Course section: {{ section.section_name }}</h5>
-          <p>{{ section.start_time }} - {{ section.end_time }}</p>
-          <p>Days: {{ section.days }}</p>
+            <h3>{{ section.course.department }}  {{ section.course.number }}</h3>
+            <h5>Course section: {{ section.section_name }}</h5>
+            <p>{{ section.start_time }} - {{ section.end_time }}</p>
+            <p>Days: {{ section.days }}</p>
+            <p><a href="{% url 'assign_ta' section.course %}">Assign TAs</a></p>
         </div>
       {% endfor %}
     {% endif %}
