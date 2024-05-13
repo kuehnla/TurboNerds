@@ -10,11 +10,11 @@
   <div class="container">
     {% for user in users %}
       <div class="card">
-      <div class="remove">
-                {% if member.is_admin %}
-          <a class="btn btn-danger" href="/delete/{{ user.email }}">Delete</a>
-        {% endif %}
-      </div>
+        <div class="remove">
+          {% if member.is_admin %}
+            <a class="btn btn-danger" href="/delete/{{ user.email }}">Delete</a>
+          {% endif %}
+        </div>
         <div class="profile_img">
           <img src={% static 'assets/person-circle-outline.svg' %} class="profile" alt="Profile Image">
         </div>
@@ -56,12 +56,11 @@
         </div>
       </div>
     {% endfor %}
-
   </div>
   {% if member.is_admin %}
-    <a href="/register">
-      <button class="register">Register New Account</button>
-    </a>
+    <div class="regbtn">
+    <a href="/register/" id="reg">Register New Account</a>
+    </div>
   {% endif %}
 {% endblock %}
 

@@ -84,3 +84,17 @@ button {
     grid-column: 3 / 4;
     grid-row: 1 / 2;
 }
+
+.regbtn {
+    text-align: center;
+    justify-content: center;
+}
+
+#reg {
+        width: 300px;
+        background-color: #f2f2f2;
+    box-shadow: 0 0 10px rgb(222, 222, 222);
+    padding: 8px;
+    border: 1px solid black;
+    color: black;
+}
