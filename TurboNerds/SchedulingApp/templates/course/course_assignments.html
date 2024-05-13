@@ -37,7 +37,7 @@
               {% endfor %}
             </table>
           {% else %}
-            <p>No labs at this time.</p>
+            <p class="none">No labs at this time.</p>
           {% endif %}
 
           {% if course.section_set.all %}
@@ -60,7 +60,7 @@
               {% endfor %}
             </table>
           {% else %}
-            <p>No sections at this time.</p>
+            <p class="none">No sections at this time.</p>
           {% endif %}
           <br>
       {% endfor %}
