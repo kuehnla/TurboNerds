@@ -55,12 +55,12 @@ class CourseInformation:
             form = TaAssignment(course)
         return render(request, 'course/ta_assignments.html', {'form': form})
 
-    def read_information(request, email):
+    def read_information(request):
         if not request.user.is_authenticated:
             return redirect('login')
         users = User.objects.all()
-        user = User.objects.get(email=email)
-        return render(request, 'course/user_information.html', {'users': users, 'member': user})
+        # user = User.objects.get(email=email)
+        return render(request, 'course/user_information.html', {'users': users, 'member': request.user})
 
 
 class ProfileModification:
@@ -116,10 +116,12 @@ class ProfileModification:
             form = EditProfileForm(instance=user)
             return render(request, 'accounts/edit_profile.html', {'login': user, 'form': form})
 
-    def delete(request, email):
+    def delete_user(request, email):
         del_user = User.objects.get(email=email)
-        del_user.delete()
-        return redirect('home')
+        if request.method == 'POST':
+            del_user.delete()
+            return redirect('/user_information')
+        return render(request, 'accounts/confirm_delete.html')
 
 class Logins:
 
