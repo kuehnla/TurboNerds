@@ -10,11 +10,6 @@
   <div class="container">
     {% for user in users %}
       <div class="card">
-        <div class="remove">
-          {% if member.is_admin %}
-            <a class="btn btn-danger" href="/delete/{{ user.email }}">Delete</a>
-          {% endif %}
-        </div>
         <div class="profile_img">
           <img src={% static 'assets/person-circle-outline.svg' %} class="profile" alt="Profile Image">
         </div>
@@ -22,11 +17,6 @@
           <div class="name">
             <img src={% static 'assets/accessibility.svg' %} alt="dude" width="25px">
             <h5>{{ user.get_full_name }}</h5>
-
-             {% if member.is_admin %}
-                 <a href="{% url 'delete_user' user.email %}">Del</a>
-{#                <a class="btn btn-danger" href="/delete/{{ user.email }}">Delete</a>#}
-             {% endif %}
           </div>
           <div class="role">
             <img src={% static 'assets/star.svg' %} alt="role" width="25px">
@@ -59,12 +49,17 @@
             </div>
           {% endif %}
         </div>
+        {% if member.is_admin %}
+          <div class="remove">
+            <a id="delete" href="{% url 'delete_user' user.email %}">Delete</a>
+          </div>
+        {% endif %}
       </div>
     {% endfor %}
   </div>
   {% if member.is_admin %}
     <div class="regbtn">
-    <a href="/register/" id="reg">Register New Account</a>
+      <a href="/register/" id="reg">Register New Account</a>
     </div>
   {% endif %}
 {% endblock %}

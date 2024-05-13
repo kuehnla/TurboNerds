@@ -17,57 +17,62 @@
 
   <h1>Course Information</h1>
   <div class="container">
-  {% if courses %}
-  {% for course in courses %}
-    <div class="course_container">
-    <h2>{{ course.name }} ({{ course.department }} {{ course.number }})</h2>
-    {% if course.lab_set.all %}
-    <div class="table_container">
-      <h3>Labs:</h3>
-      <table>
-        <tr>
-          <th>TA</th>
-          <th>Lab section</th>
-          <th>Times</th>
-          <th>Days</th>
-        </tr>
-        {% for lab in course.lab_set.all %}
-          <tr>
-            <td>{{ lab.assistant.first_name }} {{ lab.assistant.last_name }}</td>
-            <td>{{ lab.lab_name }}</td>
-            <td>{{ lab.start_time }} - {{ lab.end_time }}</td>
-            <td>{{ lab.days }}</td>
-          </tr>
-        {% endfor %}
-      </table>
-    {% endif %}
+    {% if courses %}
+      {% for course in courses %}
+        <div class="course_container">
+          <h2>{{ course.name }} ({{ course.department }} {{ course.number }})</h2>
+          {% if course.lab_set.all %}
+            <div class="table_container">
+            <h3>Labs:</h3>
+            <table>
+              <tr>
+                <th>TA</th>
+                <th>Lab section</th>
+                <th>Times</th>
+                <th>Days</th>
+              </tr>
+              {% for lab in course.lab_set.all %}
+                <tr>
+                  <td>{{ lab.assistant.first_name }} {{ lab.assistant.last_name }}</td>
+                  <td>{{ lab.lab_name }}</td>
+                  <td>{{ lab.start_time }} - {{ lab.end_time }}</td>
+                  <td>{{ lab.days }}</td>
+                </tr>
+              {% endfor %}
+            </table>
+          {% else %}
+            <p>No labs at this time.</p>
+          {% endif %}
 
-    {% if course.section_set.all %}
+          {% if course.section_set.all %}
 
-    <table>
-    <h3>Sections:</h3>
-      <tr>
-        <th>Instructor</th>
-        <th>Start/End</th>
-        <th>Times</th>
-        <th>Days</th>
-      </tr>
-      {% for section in course.section_set.all %}
-        <tr>
-          <td>{{ section.instructor.get_full_name }}</td>
-          <td>{{ section.start_date }} - {{ section.end_date }}</td>
-          <td>Start Time: {{ section.start_time }} - {{ section.end_time }}</td>
-          <td>Days: {{ section.days }}</td>
-        </tr>
+            <table>
+              <h3>Sections:</h3>
+              <tr>
+                <th>Instructor</th>
+                <th>Start/End</th>
+                <th>Times</th>
+                <th>Days</th>
+              </tr>
+              {% for section in course.section_set.all %}
+                <tr>
+                  <td>{{ section.instructor.get_full_name }}</td>
+                  <td>{{ section.start_date }} - {{ section.end_date }}</td>
+                  <td>Start Time: {{ section.start_time }} - {{ section.end_time }}</td>
+                  <td>Days: {{ section.days }}</td>
+                </tr>
+              {% endfor %}
+            </table>
+            </div>
+          {% else %}
+            <p>No sections at this time.</p>
+          {% endif %}
+
+        </div>
       {% endfor %}
-    </table>
-      </div>
+    {% else %}
+      <h2>No courses at this time.</h2>
     {% endif %}
-    </div>
-  {% endfor %}
-  {% else %}
-    <h2>No courses at this time.</h2>
-  {% endif %}
   </div>
 {% endblock %}
 
