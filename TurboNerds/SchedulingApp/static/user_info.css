@@ -20,7 +20,7 @@ h1 {
 
 .card {
     display: grid;
-    grid-template-columns: 2fr 4fr 1fr;
+    grid-template-columns: 2fr 5fr 1fr;
     grid-template-rows: 1fr;
     margin-bottom: 24px;
     padding: 8px;
@@ -97,4 +97,18 @@ button {
     padding: 8px;
     border: 1px solid black;
     color: black;
+}
+
+.remove {
+    display: flex;
+    flex-direction: column;
+}
+
+#delete {
+    background-color: #DC3545;
+    color: white;
+    border-radius: 8px;
+    border: none;
+    padding: 6px 12px;
+    font-weight: bolder;
 }
