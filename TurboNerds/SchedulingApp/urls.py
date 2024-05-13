@@ -14,8 +14,9 @@ urlpatterns = [
     path('register/', views.ProfileModification.register, name='register'),
     path('edit_information/<str:email>', views.ProfileModification.edit_profile, name='edit_profile'),
     path('course_information/', views.CourseInformation.course_assignment, name='course_assignment'),
-    path('user_information/<str:email>', views.CourseInformation.read_information, name='user_information'),
+    # path('user_information/<str:email>', views.CourseInformation.read_information, name='user_information'),
+    path('user_information/', views.CourseInformation.read_information, name='user_information'),
     path('assign_ta/<str:email>', views.CourseInformation.assign_Tas, name='assign_ta'),
-    path('delete/<str:email>', views.ProfileModification.delete, name='delete'),
+    path('delete_user/<str:email>', views.ProfileModification.delete_user, name='delete_user'),
     path('success/', views.SuccessEdit.success, name='success')
 ]

@@ -22,6 +22,11 @@
           <div class="name">
             <img src={% static 'assets/accessibility.svg' %} alt="dude" width="25px">
             <h5>{{ user.get_full_name }}</h5>
+
+             {% if member.is_admin %}
+                 <a href="{% url 'delete_user' user.email %}">Del</a>
+{#                <a class="btn btn-danger" href="/delete/{{ user.email }}">Delete</a>#}
+             {% endif %}
           </div>
           <div class="role">
             <img src={% static 'assets/star.svg' %} alt="role" width="25px">
