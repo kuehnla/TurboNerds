@@ -89,7 +89,7 @@ class ProfileModification:
                     User.objects.filter(email=new_email).update(is_instructor=False, is_admin=False,
                                                                    is_assistant=True)
 
-                return redirect('home')
+                return redirect('user_information')
         else:
             form = RegistrationForm()
 
