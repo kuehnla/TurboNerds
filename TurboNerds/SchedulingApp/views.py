@@ -145,7 +145,7 @@ class ProfileModification:
         del_user = User.objects.get(email=email)
         if request.method == 'POST':
             del_user.delete()
-            return redirect('/user_information')
+            return redirect('user_information')
         return render(request, 'accounts/confirm_delete.html')
 
 class Logins:
