@@ -1,5 +1,6 @@
+from django.db.models import Prefetch
 from django.shortcuts import render, redirect
-from .models import User
+from .models import User, Lab, Section, Course
 
 
 class Users:
@@ -20,7 +21,11 @@ class Users:
                                                             'user': request.user, 'request': request})
 
         if request.user.is_admin:
-            return render(request, 'supervisor_home.html', {})
+            courses = Course.objects.prefetch_related(
+                Prefetch('lab_set', queryset=Lab.objects.order_by('start_time')),
+                Prefetch('section_set', queryset=Section.objects.order_by('start_date'))
+            ).all()
+            return render(request, 'course/course_assignments.html', {'courses': courses})
 
     def display_other(request, email):
 

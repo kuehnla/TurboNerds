@@ -69,3 +69,7 @@ h2 {
 .course_container {
     padding-bottom: 32px;
 }
+
+.entries {
+    display: flex;
+}
