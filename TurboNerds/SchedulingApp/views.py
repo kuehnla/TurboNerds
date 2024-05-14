@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .forms import RegistrationForm, EditProfileForm, TaAssignment, InstructorAssignment, CreateCourse
+from .forms import RegistrationForm, EditProfileForm, TaAssignment, InstructorAssignment, CreateCourse, Lab_Creation, Section_Creation
 from .models import User, Course, Section, Lab
 from django.db.models import Prefetch
 from django.conf import settings
@@ -32,13 +32,14 @@ class CourseInformation:
             Prefetch('lab_set', queryset=Lab.objects.order_by('start_time')),
             Prefetch('section_set', queryset=Section.objects.order_by('start_date'))
         ).all()
+
         form = CreateCourse()
         if request.method == 'POST':
             if 'cancel' in request.POST:
                 return redirect('home')
             if 'add' in request.POST:
                 add = 'add'
-                return render(request, 'course/course_assignments.html', {'courses': courses, 'form': form, 'add': add})
+                return render(request, 'course_creation.html', {'courses': courses, 'form': form, 'add': add})
             if 'save' in request.POST:
                 form = CreateCourse(request.POST)
                 form.save()
@@ -46,7 +47,44 @@ class CourseInformation:
             if 'cancel' in request.GET:
                 return redirect('home')
         return render(request, 'course/course_assignments.html', {'courses': courses, 'form': form})
+    def course_creation(request):
+        if not request.user.is_authenticated:
+            return redirect('login')
+        if request.method == "POST":
+            form = CreateCourse(request.POST)
 
+            if form.is_valid():
+                form.save()
+                return redirect('course_assignment')
+        else:
+            form = CreateCourse()
+        return render(request, 'course_creation.html', {'form': form})
+    def section_creation(request):
+        if not request.user.is_authenticated:
+            return redirect('login')
+        if request.method == "POST":
+            form = Section_Creation(request.POST)
+
+            if form.is_valid():
+                form.save()
+
+                return redirect('course_assignment')
+        else:
+            form = Section_Creation()
+        return render(request, 'section_creation.html', {'form': form})
+    def lab_creation(request):
+        if not request.user.is_authenticated:
+            return redirect('login')
+        if request.method == "POST":
+            form = Lab_Creation(request.POST)
+
+            if form.is_valid():
+                form.save()
+
+                return redirect('course_assignment')
+        else:
+            form = Lab_Creation()
+        return render(request, 'lab_creation.html', {'form': form})
     def delete_course(request, course):
         del_course = Course.objects.get(name=course)
         if request.method == 'POST':
@@ -155,13 +193,14 @@ class ProfileModification:
                 User.objects.filter(email=email).update(first_name=user.first_name,
                                                         last_name=user.last_name, email=user.email, phone=user.phone)
                 return redirect('user_information')
+
         else:
 
             user = User.objects.get(email=email)
             if request.user != user and not request.user.is_admin:
                 return redirect('user_information')
             form = EditProfileForm(instance=user)
-            return render(request, 'accounts/edit_profile.html', {'login': user, 'form': form})
+        return render(request, 'accounts/edit_profile.html', {'login': user, 'form': form})
 
     def delete_user(request, email):
         del_user = User.objects.get(email=email)

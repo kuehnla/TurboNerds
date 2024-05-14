@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Lab</title>
+</head>
+<body>
+    <h1>Create a New Lab</h1>
+    <form method="post">
+        {% csrf_token %}
+           {{ form.course.label_tag }} {{ form.course }}<br>
+        {{ form.assistant.label_tag }} {{ form.assistant }}<br>
+    {{ form.lab_name.label_tag }} {{ form.lab_name }}<br>
+    
+    {{ form.start_time.label_tag }} {{ form.start_time }}<br>
+    {{ form.end_time.label_tag }} {{ form.end_time }}<br>
+    {{ form.days.label_tag }} {{ form.days }}<br>
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>
+{% endblock %}
