@@ -9,7 +9,7 @@ urlpatterns = [
 
     path('home/', views.HomeViews.home, name='home'),
     path('', views.HomeViews.home, name='home'),
-    path('<str:email>', views.HomeViews.otherhome, name='otherhome'),
+    # path('<str:email>', views.HomeViews.otherhome, name='otherhome'),
 
     path('register/', views.ProfileModification.register, name='register'),
     path('edit_information/<str:email>', views.ProfileModification.edit_profile, name='edit_profile'),
@@ -21,5 +21,5 @@ urlpatterns = [
     path('assign_instructor/<str:course>', views.CourseInformation.assign_instructor, name='assign_instructor'),
 
     path('delete_user/<str:email>', views.ProfileModification.delete_user, name='delete_user'),
-    path('success/', views.SuccessEdit.success, name='success')
+    path('delete_course/<str:course>', views.CourseInformation.delete_course, name='delete_course'),
 ]

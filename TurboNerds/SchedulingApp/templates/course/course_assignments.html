@@ -13,11 +13,31 @@
     <meta charset="UTF-8">
     <title>Courses with Labs and Sections</title>
   </head>
-    <h1>Course Information</h1>
+  <h1>Course Information</h1>
   <div class="container">
     {% if courses %}
+        <form method="post" action="{% url 'course_assignment' %}" novalidate>{% csrf_token %}
+        {% if add == 'add' %}
+            <div class="form-container">
+                <div class="entries">
+                    {% for field in form %}
+                        <div class="entry">
+                            {{ field }}
+                        </div>
+                    {% endfor %}
+                    <button name="save">Save</button>
+                    <a href="/home/"><button>Cancel</button></a>
+                </div>
+            </div>
+        {% else %}
+            <button name="add">Add Course</button>
+        {% endif %}
+        </form>
       {% for course in courses %}
           <h2>{{ course.name }} ({{ course.department }} {{ course.number }})</h2>
+          <div class="remove">
+            <a id="delete" href="{% url 'delete_course' course.name %}">Delete</a>
+          </div>
           {% if course.lab_set.all %}
             <h3>Labs:</h3>
             <table>
