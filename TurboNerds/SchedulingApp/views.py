@@ -51,7 +51,7 @@ class CourseInformation:
         del_course = Course.objects.get(name=course)
         if request.method == 'POST':
             del_course.delete()
-            return redirect('/course_information')
+            return redirect('/course_information/')
         return render(request, 'course/confirm_course_delete.html')
 
     def assign_Tas(request, course):

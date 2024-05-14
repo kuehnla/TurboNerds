@@ -1,4 +1,5 @@
 from django.db.models import Prefetch
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from .models import User, Lab, Section, Course
 
@@ -27,6 +28,8 @@ class Users:
             ).all()
             return render(request, 'course/course_assignments.html', {'courses': courses})
 
+        return HttpResponse("User not found or not authorized.")
+
     def display_other(request, email):
 
         if not request.user.is_authenticated:
@@ -34,10 +37,12 @@ class Users:
 
         user = User.objects.filter(email=email).first()
 
-        if user.is_assistant:
+        if user is not None and user.is_assistant:
             labs = user.lab_set.all()
             return render(request, 'ta_home.html', {'labs': labs, 'user': user})
 
-        if user.is_instructor:
+        if user is not None and user.is_instructor:
             sections = user.section_set.all()
             return render(request, 'instructor_home.html', {'sections': sections, 'user': user})
+
+        return HttpResponse("User not found or not authorized.")
