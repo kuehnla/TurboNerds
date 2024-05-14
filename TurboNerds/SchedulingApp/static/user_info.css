@@ -80,11 +80,6 @@ button {
     text-align: center;
 }
 
-.remove {
-    grid-column: 3 / 4;
-    grid-row: 1 / 2;
-}
-
 .regbtn {
     text-align: center;
     justify-content: center;
@@ -101,7 +96,11 @@ button {
 
 .remove {
     display: flex;
-    flex-direction: column;
+    height: 40px;
+    grid-column: 3 / 4;
+    grid-row: 1 / 2;
+    gap: 4px;
+    align-items: center;
 }
 
 #delete {
@@ -109,6 +108,6 @@ button {
     color: white;
     border-radius: 8px;
     border: none;
-    padding: 6px 12px;
+    padding: 6px 8px;
     font-weight: bolder;
 }

@@ -134,10 +134,12 @@ class ProfileModification:
 
                 User.objects.filter(email=email).update(first_name=user.first_name,
                                                         last_name=user.last_name, email=user.email, phone=user.phone)
-                return redirect('home')
+                return redirect('user_information')
         else:
 
             user = User.objects.get(email=email)
+            if request.user != user and not request.user.is_admin:
+                return redirect('user_information')
             form = EditProfileForm(instance=user)
             return render(request, 'accounts/edit_profile.html', {'login': user, 'form': form})
 
@@ -147,6 +149,7 @@ class ProfileModification:
             del_user.delete()
             return redirect('user_information')
         return render(request, 'accounts/confirm_delete.html')
+
 
 class Logins:
 

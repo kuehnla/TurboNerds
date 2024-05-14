@@ -27,12 +27,12 @@ class Users:
         if not request.user.is_authenticated:
             return redirect('login')
 
-        # user = User.objects.filter(email=email).first()
+        user = User.objects.filter(email=email).first()
 
-        if request.user.is_assistant:
-            labs = request.user.lab_set.all()
-            return render(request, 'ta_home.html', {'labs': labs, 'user': request.user})
+        if user.is_assistant:
+            labs = user.lab_set.all()
+            return render(request, 'ta_home.html', {'labs': labs, 'user': user})
 
-        if request.user.is_instructor:
-            sections = request.user.section_set.all()
-            return render(request, 'instructor_home.html', {'sections': sections, 'user': request.user})
+        if user.is_instructor:
+            sections = user.section_set.all()
+            return render(request, 'instructor_home.html', {'sections': sections, 'user': user})

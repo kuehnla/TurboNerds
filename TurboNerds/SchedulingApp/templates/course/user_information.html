@@ -51,7 +51,8 @@
         </div>
         {% if member.is_admin %}
           <div class="remove">
-            <a id="delete" href="{% url 'delete_user' user.email %}">Delete</a>
+            <a href="/edit_information/{{ user.email }}"><img src="{% static 'assets/pencil.svg' %}" alt="pencil" width="25px"></a>
+            <a id="delete" href="{% url 'delete_user' user.email %}"><img src="{% static 'assets/trash.svg' %}" alt="trash" width="25px"></a>
           </div>
         {% endif %}
       </div>
