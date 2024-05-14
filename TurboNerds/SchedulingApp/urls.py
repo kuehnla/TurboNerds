@@ -21,4 +21,7 @@ urlpatterns = [
 
     path('delete_user/<str:email>', views.ProfileModification.delete_user, name='delete_user'),
     path('delete_course/<str:course>', views.CourseInformation.delete_course, name='delete_course'),
+    path('course_creation/', views.CourseInformation.course_creation, name='course_creation'),
+    path('lab_creation/', views.CourseInformation.lab_creation, name='lab_creation'),
+    path('section_creation/', views.CourseInformation.section_creation, name='section_creation')
 ]
