@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
-from .forms import RegistrationForm, EditProfileForm, TaAssignment, InstructorAssignment, CreateCourse
+from .forms import RegistrationForm, EditProfileForm, TaAssignment, InstructorAssignment, CreateCourse, CreateLab, \
+    CreateSection
 from .models import User, Course, Section, Lab
 from django.db.models import Prefetch
 from django.conf import settings
@@ -28,24 +29,54 @@ class CourseInformation:
     def course_assignment(request):
         if not request.user.is_authenticated:
             return redirect('login')
+        context = {}
         courses = Course.objects.prefetch_related(
             Prefetch('lab_set', queryset=Lab.objects.order_by('start_time')),
             Prefetch('section_set', queryset=Section.objects.order_by('start_date'))
         ).all()
-        form = CreateCourse()
+        context['courses'] = courses
+        context['course_form'] = CreateCourse()
+        context['lab_form'] = CreateLab(request.POST.get('course_name'))
+        context['section_form'] = CreateSection(request.POST.get('course_name'))
         if request.method == 'POST':
-            if 'cancel' in request.POST:
-                return redirect('home')
-            if 'add' in request.POST:
-                add = 'add'
-                return render(request, 'course/course_assignments.html', {'courses': courses, 'form': form, 'add': add})
-            if 'save' in request.POST:
+            if 'course-add' in request.POST:
+                context['add'] = 'add_course'
+                return render(request, 'course/course_assignments.html', context)
+            if 'course-save' in request.POST:
                 form = CreateCourse(request.POST)
-                form.save()
-        if request.method == 'GET':
-            if 'cancel' in request.GET:
-                return redirect('home')
-        return render(request, 'course/course_assignments.html', {'courses': courses, 'form': form})
+                if form.is_valid():
+                    form.save()
+                else:
+                    return HttpResponse("Bad input, try again")
+            if 'lab-add' in request.POST:
+                context['add'] = 'add_lab'
+                return render(request, 'course/course_assignments.html', context)
+            if 'lab-save' in request.POST:
+                print(request.POST)
+                course_name = request.POST.get('lab_course_name')
+                print(course_name)
+                my_course = Course.objects.get(name=course_name)
+                print(my_course)
+                form = CreateLab(my_course, request.POST)
+                if form.is_valid():
+                    form.save()
+                else:
+                    return HttpResponse("Bad input, try again")
+            if 'section-add' in request.POST:
+                context['add'] = 'add_section'
+                return render(request, 'course/course_assignments.html', context)
+            if 'section-save' in request.POST:
+                print(request.POST)
+                course_name = request.POST.get('section_course_name')
+                print(course_name)
+                my_course = Course.objects.get(name=course_name)
+                print(my_course)
+                form = CreateSection(my_course, request.POST)
+                if form.is_valid():
+                    form.save()
+                else:
+                    return HttpResponse("Bad input, try again")
+        return render(request, 'course/course_assignments.html', context)
 
     def delete_course(request, course):
         del_course = Course.objects.get(name=course)

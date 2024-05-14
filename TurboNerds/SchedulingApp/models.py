@@ -85,11 +85,11 @@ class Lab(models.Model):
         on_delete=models.CASCADE,
         limit_choices_to={'is_assistant': True}
     )
-    lab_name = models.CharField(max_length=3, default="lab 1")
+    lab_name = models.CharField(max_length=3, default="000")
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
-    start_time = models.TimeField()
-    end_time = models.TimeField()
-    days = models.CharField(max_length=10, default="Mo We")
+    start_time = models.TimeField(default="HH:MM:SS")
+    end_time = models.TimeField(default="HH:MM:SS")
+    days = models.CharField(max_length=10, default="Mo")
 
     def __str__(self):
         return self.lab_name
@@ -103,11 +103,11 @@ class Section(models.Model):
         limit_choices_to={'is_instructor': True}
     )
     section_name = models.CharField(max_length=3, default="001")
-    start_date = models.DateField()
-    end_date = models.DateField()
-    start_time = models.TimeField()
-    end_time = models.TimeField()
-    days = models.CharField(max_length=10, default="Tu Th")
+    start_date = models.DateField(default="YYYY-MM-DD")
+    end_date = models.DateField(default="YYYY-MM-DD")
+    start_time = models.TimeField(default="HH:MM:SS")
+    end_time = models.TimeField(default="HH:MM:SS")
+    days = models.CharField(max_length=10, default="Tu/Th")
 
     def __str__(self):
         return self.section_name

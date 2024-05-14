@@ -71,3 +71,37 @@ class CreateCourse(forms.ModelForm):
     class Meta:
         model = Course
         fields = ['name', 'department', 'number', 'semester']
+
+
+class CreateLab(forms.ModelForm):
+    class Meta:
+        model = Lab
+        fields = ['assistant', 'lab_name', 'start_time', 'end_time', 'days']
+
+    def __init__(self, course, *args, **kwargs):
+        super(CreateLab, self).__init__(*args, **kwargs)
+        self.course_id = course
+
+    def save(self, commit=True):
+        instance = super(CreateLab, self).save(commit=False)
+        instance.course = self.course_id
+        if commit:
+            instance.save()
+        return instance
+
+
+class CreateSection(forms.ModelForm):
+    class Meta:
+        model = Section
+        fields = ['instructor', 'start_date', 'end_date', 'start_time', 'end_time', 'days']
+
+    def __init__(self, course, *args, **kwargs):
+        super(CreateSection, self).__init__(*args, **kwargs)
+        self.course_id = course
+
+    def save(self, commit=True):
+        instance = super(CreateSection, self).save(commit=False)
+        instance.course = self.course_id
+        if commit:
+            instance.save()
+        return instance
