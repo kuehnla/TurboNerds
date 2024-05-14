@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.forms import ModelForm
 from .models import User, Lab, Section, Course
-
+from django.forms.widgets import DateInput
 
 # use of django forms
 # from .models import User
@@ -36,6 +36,10 @@ class EditProfileForm(ModelForm):
     def clean_phone(self):
         phone = self.cleaned_data['phone']
         if phone != self.instance.phone:
+            if not phone.isdigit():
+                raise forms.ValidationError("Phone number must contain only digits.")
+            if len(phone) != 10:
+                raise forms.ValidationError("Phone number must be 10 digits long.")
             if User.objects.filter(phone=phone).exists():
                 raise forms.ValidationError("This phone number is already in use.")
         return phone
@@ -71,3 +75,53 @@ class CreateCourse(forms.ModelForm):
     class Meta:
         model = Course
         fields = ['name', 'department', 'number', 'semester']
+class Lab_Creation(forms.ModelForm):
+    DAYS_CHOICES = [
+        ('Mo', 'Mo'),
+        ('Tu', 'Tu'),
+        ('Wed', 'Wed'),
+        ('Th', 'Th'),
+        ('Fri', 'Fri'),
+    ]
+    days = forms.MultipleChoiceField(choices=DAYS_CHOICES, widget=forms.CheckboxSelectMultiple)
+    class Meta:
+        model = Lab
+        fields = ['assistant', 'lab_name', 'start_time', 'end_time', 'days', 'course']
+        labels = {
+            'course': 'Course',
+            'assistant': 'Assistant',
+            'lab_name': 'Lab name',
+            'start_time': 'Start time (HH:MM:SS)',
+            'end_time': 'End time (HH:MM:SS)',
+            'days': 'Days'
+        }
+
+class Section_Creation(forms.ModelForm):
+    DAYS_CHOICES = [
+        ('Mo', 'Mo'),
+        ('Tu', 'Tu'),
+        ('Wed', 'Wed'),
+        ('Th', 'Th'),
+        ('Fri', 'Fri'),
+    ]
+    days = forms.MultipleChoiceField(choices=DAYS_CHOICES, widget=forms.CheckboxSelectMultiple)
+    class Meta:
+        model = Section
+        fields = ['instructor', 'section_name','start_date', 'end_date', 'start_time', 'end_time', 'days', 'course']
+        labels = {
+            'course': 'Course',
+            'instructor': 'Instructor',
+            'section_name': 'Section name',
+            'start_date': 'Start date (mm/dd/yyyy)',
+            'end_date': 'End date (mm/dd/yyyy)',
+            'start_time': 'Start time (HH:MM:SS)',
+            'end_time': 'End time (HH:MM:SS)',
+            'days': 'Days'
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields['start_date'].widget = DateInput(attrs={'type': 'date'})
+        self.fields['end_date'].widget = DateInput(attrs={'type': 'date'})
+        #self.fields['days'].widget = Select(choices=self.DAYS_CHOICES)

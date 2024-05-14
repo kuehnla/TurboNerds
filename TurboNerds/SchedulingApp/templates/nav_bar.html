@@ -8,6 +8,20 @@
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
         {% if user.is_authenticated %}
+            {% if user.is_admin %}
+                <li class="nav-item">
+        <a class="nav-link" href="{% url 'register' %}">Register User</a>
+      </li>
+                <li class="nav-item">
+                <a class="nav-link" href="{% url 'course_creation' %}">Create Course</a>
+                </li>
+                <li class="nav-item">
+                <a class="nav-link" href="{% url 'lab_creation' %}">Create Lab</a>
+                </li>
+                <li class="nav-item">
+                <a class="nav-link" href="{% url 'section_creation' %}">Create Section</a>
+                </li>
+                {% endif %}
       <li class="nav-item">
         <a class="nav-link" href="{% url 'edit_profile' request.user.email %}">Edit Information</a>
       </li>  
