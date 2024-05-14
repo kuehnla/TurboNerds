@@ -70,6 +70,13 @@ h2 {
     padding-bottom: 32px;
 }
 
+.none {
+    margin-top: 12px;
+    background-color: #f2f2f2;
+    border-radius: 12px;
+    padding: 8px;
+}
+
 .entries {
     display: flex;
 }
