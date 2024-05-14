@@ -76,3 +76,7 @@ h2 {
     border-radius: 12px;
     padding: 8px;
 }
+
+.entries {
+    display: flex;
+}

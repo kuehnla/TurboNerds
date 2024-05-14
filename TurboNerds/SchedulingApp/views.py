@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .forms import RegistrationForm, EditProfileForm, TaAssignment, InstructorAssignment
+from .forms import RegistrationForm, EditProfileForm, TaAssignment, InstructorAssignment, CreateCourse
 from .models import User, Course, Section, Lab
 from django.db.models import Prefetch
 from django.conf import settings
@@ -32,7 +32,27 @@ class CourseInformation:
             Prefetch('lab_set', queryset=Lab.objects.order_by('start_time')),
             Prefetch('section_set', queryset=Section.objects.order_by('start_date'))
         ).all()
-        return render(request, 'course/course_assignments.html', {'courses': courses})
+        form = CreateCourse()
+        if request.method == 'POST':
+            if 'cancel' in request.POST:
+                return redirect('home')
+            if 'add' in request.POST:
+                add = 'add'
+                return render(request, 'course/course_assignments.html', {'courses': courses, 'form': form, 'add': add})
+            if 'save' in request.POST:
+                form = CreateCourse(request.POST)
+                form.save()
+        if request.method == 'GET':
+            if 'cancel' in request.GET:
+                return redirect('home')
+        return render(request, 'course/course_assignments.html', {'courses': courses, 'form': form})
+
+    def delete_course(request, course):
+        del_course = Course.objects.get(name=course)
+        if request.method == 'POST':
+            del_course.delete()
+            return redirect('/course_information')
+        return render(request, 'course/confirm_course_delete.html')
 
     def assign_Tas(request, course):
         if not request.user.is_authenticated:
@@ -148,7 +168,7 @@ class ProfileModification:
         if request.method == 'POST':
             del_user.delete()
             return redirect('user_information')
-        return render(request, 'accounts/confirm_delete.html')
+        return render(request, 'accounts/confirm_user_delete.html')
 
 
 class Logins:

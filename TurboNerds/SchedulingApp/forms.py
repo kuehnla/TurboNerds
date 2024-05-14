@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.forms import ModelForm
-from .models import User, Lab, Section
+from .models import User, Lab, Section, Course
 
 
 # use of django forms
@@ -65,3 +65,9 @@ class InstructorAssignment(forms.ModelForm):
     def __init__(self, course, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['section'].queryset = Section.objects.filter(course=course)
+
+
+class CreateCourse(forms.ModelForm):
+    class Meta:
+        model = Course
+        fields = ['name', 'department', 'number', 'semester']
