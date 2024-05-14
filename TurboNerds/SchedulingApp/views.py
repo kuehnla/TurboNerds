@@ -148,6 +148,7 @@ class ProfileModification:
             return redirect('user_information')
         return render(request, 'accounts/confirm_delete.html')
 
+
 class Logins:
 
     def logout_user(request):
