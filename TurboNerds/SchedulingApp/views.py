@@ -144,20 +144,14 @@ class CourseInformation:
             return redirect('login')
         my_course = Course.objects.get(name=course)
         my_lab = Lab.objects.get(lab_name=lab)
-        # labs = my_course.lab_set
-        # print(labs)
-        # if not labs:
-        #     messages.error(request, 'No labs assigned to this course')
-        #     return HttpResponse("<h1>No labs for this course</h1><a href='/'><button>back</button></a>")
-
+        form = TaAssignment(my_course, my_lab)
         if request.method == 'POST':
-            form = TaAssignment(my_course, my_lab, request.POST)
+            form = TaAssignment(my_course, my_lab, request.POST, start_time=my_lab.start_time, end_time=my_lab.end_time)
             if form.is_valid():
-                lab.save()
+                form.save()
                 messages.success(request, 'TA successfully assigned to lab.')
                 return redirect('course_assignment')
-        else:
-            form = TaAssignment(my_course, my_lab, None)
+
         return render(request, 'course/ta_assignments.html', {'form': form})
 
     def assign_instructor(request, course):
