@@ -143,7 +143,7 @@ class SectionCreation(forms.ModelForm):
         # self.fields['days'].widget = Select(choices=self.DAYS_CHOICES)
 
     def save(self, commit=True):
-        instance = super(LabCreation, self).save(commit=False)
+        instance = super(SectionCreation, self).save(commit=False)
         instance.course = self.course_id
         if commit:
             instance.save()

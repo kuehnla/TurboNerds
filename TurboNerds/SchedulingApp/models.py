@@ -180,6 +180,12 @@ class Lab(models.Model):
     def __str__(self):
         return self.lab_name
 
+    # def get_days(self):
+    #     result = ""
+    #     for day in self.days:
+    #         result = result + "/" + day
+    #     return "result"
+
 
 class Section(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
@@ -197,3 +203,6 @@ class Section(models.Model):
 
     def __str__(self):
         return self.section_name
+
+    # def get_days(self):
+    #     return self.days[0] + "/" + self.days[1]

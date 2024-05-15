@@ -39,7 +39,6 @@ class CourseInformation:
         context['lab_form'] = LabCreation(request.POST.get('course_name'))
         context['section_form'] = SectionCreation(request.POST.get('course_name'))
 
-        form = CreateCourse()
         if request.method == 'POST':
             if 'course-add' in request.POST:
                 context['add'] = 'add_course'
