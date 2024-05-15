@@ -53,8 +53,17 @@ class TaAssignment(forms.ModelForm):
         model = Lab
         fields = ['ta']
 
-    def __init__(self, course, *args, **kwargs):
+    def __init__(self, course, lab, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.course_id = course
+        self.lab_id = lab
+
+    def save(self, commit=True):
+        instance = super(TaAssignment, self).save(commit=False)
+        instance.course = self.course_id
+        if commit:
+            instance.save()
+        return instance
 
 
 
@@ -69,6 +78,7 @@ class InstructorAssignment(forms.ModelForm):
     def __init__(self, course, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['section'].queryset = Section.objects.filter(course=course)
+        self.course_id = course
 
 
 class CreateCourse(forms.ModelForm):
