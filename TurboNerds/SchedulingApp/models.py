@@ -169,7 +169,8 @@ class Lab(models.Model):
     assistant = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        limit_choices_to={'is_assistant': True}
+        limit_choices_to={'is_assistant': True},
+        null=True
     )
     lab_name = models.CharField(max_length=20, choices=Number.choices, default="001")
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
@@ -192,7 +193,8 @@ class Section(models.Model):
     instructor = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        limit_choices_to={'is_instructor': True}
+        limit_choices_to={'is_instructor': True},
+        null=True
     )
     section_name = models.CharField(max_length=20, choices=Number.choices, default="001")
     start_date = models.DateField()

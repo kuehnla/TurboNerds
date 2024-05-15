@@ -85,22 +85,24 @@ class Supervisor(User):
         else:
             lb.delete()
 
-    @staticmethod
     def assign_assistant(self, lab, assistant):
+        if not (self.is_admin or self.is_superuser):
+            return "No permission to assign teaching assistant"
         try:
             ta = User.objects.get(email=assistant.email)
-            lb = Lab.objects.get(lab.lab_name)
+            lb = Lab.objects.get(lab_name=lab.lab_name)
         except User.DoesNotExist and Lab.DoesNotExist:
             return "Lab and TA must both exist"
         else:
-            lb.assistant = models.ForeignKey(ta, on_delete=models.CASCADE)
+            Lab.objects.filter(lab_name=lab.lab_name).update(assistant=assistant)
 
-    @staticmethod
     def assign_instructor(self, section, instructor):
+        if not (self.is_admin or self.is_superuser):
+            return "No permission to assign instructor"
         try:
             instr = User.objects.get(email=instructor.email)
-            sec = Section.objects.get(section.name)
+            sec = Section.objects.get(section_name=section.section_name)
         except User.DoesNotExist and Section.DoesNotExist:
             return "Lab and TA must both exist"
         else:
-            sec.instructor = models.ForeignKey(instr, on_delete=models.CASCADE)
+            Section.objects.filter(section_name=section.section_name).update(instructor=instructor)
