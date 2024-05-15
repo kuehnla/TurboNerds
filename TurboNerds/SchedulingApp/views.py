@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from .forms import RegistrationForm, EditProfileForm, TaAssignment, InstructorAssignment, CreateCourse, LabCreation, \
-    SectionCreation, CreateSection, CreateLab
+    SectionCreation
 from .models import User, Course, Section, Lab
 from django.db.models import Prefetch
 from django.conf import settings
@@ -139,10 +139,11 @@ class CourseInformation:
             return redirect('/course_information/')
         return render(request, 'course/confirm_section_delete.html')
 
-    def assign_Tas(request, course):
+    def assign_Tas(request, course, lab):
         if not request.user.is_authenticated:
             return redirect('login')
         my_course = Course.objects.get(name=course)
+        my_lab = Lab.objects.get(lab_name=lab)
         labs = my_course.lab_set
         print(labs)
         if not labs:
@@ -150,11 +151,8 @@ class CourseInformation:
             return HttpResponse("<h1>No labs for this course</h1><a href='/'><button>back</button></a>")
 
         if request.method == 'POST':
-            form = TaAssignment(my_course, request.POST)
+            form = TaAssignment(my_course, my_lab, request.POST)
             if form.is_valid():
-                ta = form.cleaned_data['ta']
-                lab = form.cleaned_data['lab']
-                lab.assistant = ta
                 lab.save()
                 messages.success(request, 'TA successfully assigned to lab.')
                 return redirect('course_assignment')

@@ -16,7 +16,7 @@ urlpatterns = [
     path('course_information/', views.CourseInformation.course_assignment, name='course_assignment'),
     path('user_information/', views.CourseInformation.read_information, name='user_information'),
 
-    path('assign_ta/<str:course>', views.CourseInformation.assign_Tas, name='assign_ta'),
+    path('assign_ta/<str:course>/<str:lab>', views.CourseInformation.assign_Tas, name='assign_ta'),
     path('assign_instructor/<str:course>', views.CourseInformation.assign_instructor, name='assign_instructor'),
 
     path('delete_user/<str:email>', views.ProfileModification.delete_user, name='delete_user'),
@@ -24,7 +24,7 @@ urlpatterns = [
     path('delete_lab/<str:lab>', views.CourseInformation.delete_lab, name='delete_lab'),
     path('delete_section/<str:section>', views.CourseInformation.delete_section, name='delete_section'),
 
-    path('course_creation/', views.CourseInformation.course_creation, name='course_creation'),
-    path('lab_creation/', views.CourseInformation.lab_creation, name='lab_creation'),
-    path('section_creation/', views.CourseInformation.section_creation, name='section_creation')
+    # path('course_creation/', views.CourseInformation.course_creation, name='course_creation'),
+    # path('lab_creation/', views.CourseInformation.lab_creation, name='lab_creation'),
+    # path('section_creation/', views.CourseInformation.section_creation, name='section_creation')
 ]

@@ -52,7 +52,7 @@
               </tr>
               {% for lab in course.lab_set.all %}
                 <tr>
-                  <td>{{ lab.assistant.first_name }} {{ lab.assistant.last_name }}</td>
+                  <td>{{ lab.assistant.first_name }} {{ lab.assistant.last_name }} <a href="{% url 'assign_ta' course.name lab.lab_name %}">Change</a></td>
                   <td>{{ lab.lab_name }}</td>
                   <td>{{ lab.start_time }} - {{ lab.end_time }}</td>
                   <td>{{ lab.days }}</td>
@@ -87,7 +87,6 @@
                 {% endif %}
             </form>
           {% if course.section_set.all %}
-
             <table>
               <h3>Sections:</h3>
               <tr>
