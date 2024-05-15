@@ -5,6 +5,7 @@ from django.forms import ModelForm
 from .models import User, Lab, Section, Course
 from django.forms.widgets import DateInput
 
+
 # use of django forms
 # from .models import User
 
@@ -76,7 +77,8 @@ class CreateCourse(forms.ModelForm):
         model = Course
         fields = ['name', 'department', 'number', 'semester']
 
-class Lab_Creation(forms.ModelForm):
+
+class LabCreation(forms.ModelForm):
     DAYS_CHOICES = [
         ('Mo', 'Mo'),
         ('Tu', 'Tu'),
@@ -85,11 +87,11 @@ class Lab_Creation(forms.ModelForm):
         ('Fri', 'Fri'),
     ]
     days = forms.MultipleChoiceField(choices=DAYS_CHOICES, widget=forms.CheckboxSelectMultiple)
+
     class Meta:
         model = Lab
-        fields = ['assistant', 'lab_name', 'start_time', 'end_time', 'days', 'course']
+        fields = ['assistant', 'lab_name', 'start_time', 'end_time', 'days']
         labels = {
-            'course': 'Course',
             'assistant': 'Assistant',
             'lab_name': 'Lab name',
             'start_time': 'Start time (HH:MM:SS)',
@@ -97,7 +99,19 @@ class Lab_Creation(forms.ModelForm):
             'days': 'Days'
         }
 
-class Section_Creation(forms.ModelForm):
+    def __init__(self, course, *args, **kwargs):
+        super(LabCreation, self).__init__(*args, **kwargs)
+        self.course_id = course
+
+    def save(self, commit=True):
+        instance = super(LabCreation, self).save(commit=False)
+        instance.course = self.course_id
+        if commit:
+            instance.save()
+        return instance
+
+
+class SectionCreation(forms.ModelForm):
     DAYS_CHOICES = [
         ('Mo', 'Mo'),
         ('Tu', 'Tu'),
@@ -106,11 +120,11 @@ class Section_Creation(forms.ModelForm):
         ('Fri', 'Fri'),
     ]
     days = forms.MultipleChoiceField(choices=DAYS_CHOICES, widget=forms.CheckboxSelectMultiple)
+
     class Meta:
         model = Section
-        fields = ['instructor', 'section_name','start_date', 'end_date', 'start_time', 'end_time', 'days', 'course']
+        fields = ['instructor', 'section_name', 'start_date', 'end_date', 'start_time', 'end_time', 'days']
         labels = {
-            'course': 'Course',
             'instructor': 'Instructor',
             'section_name': 'Section name',
             'start_date': 'Start date (mm/dd/yyyy)',
@@ -120,13 +134,20 @@ class Section_Creation(forms.ModelForm):
             'days': 'Days'
         }
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, course, *args, **kwargs):
+        super(SectionCreation, self).__init__(*args, **kwargs)
+        self.course_id = course
 
         self.fields['start_date'].widget = DateInput(attrs={'type': 'date'})
         self.fields['end_date'].widget = DateInput(attrs={'type': 'date'})
-        #self.fields['days'].widget = Select(choices=self.DAYS_CHOICES)
+        # self.fields['days'].widget = Select(choices=self.DAYS_CHOICES)
 
+    def save(self, commit=True):
+        instance = super(LabCreation, self).save(commit=False)
+        instance.course = self.course_id
+        if commit:
+            instance.save()
+        return instance
 
 class CreateLab(forms.ModelForm):
     class Meta:

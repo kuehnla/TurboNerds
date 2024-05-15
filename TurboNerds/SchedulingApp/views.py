@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
-from .forms import RegistrationForm, EditProfileForm, TaAssignment, InstructorAssignment, CreateCourse, Lab_Creation, \
-    Section_Creation, CreateSection, CreateLab
+from .forms import RegistrationForm, EditProfileForm, TaAssignment, InstructorAssignment, CreateCourse, LabCreation, \
+    SectionCreation, CreateSection, CreateLab
 from .models import User, Course, Section, Lab
 from django.db.models import Prefetch
 from django.conf import settings
@@ -36,8 +36,8 @@ class CourseInformation:
         ).all()
         context['courses'] = courses
         context['course_form'] = CreateCourse()
-        context['lab_form'] = CreateLab(request.POST.get('course_name'))
-        context['section_form'] = CreateSection(request.POST.get('course_name'))
+        context['lab_form'] = LabCreation(request.POST.get('course_name'))
+        context['section_form'] = SectionCreation(request.POST.get('course_name'))
 
         form = CreateCourse()
         if request.method == 'POST':
@@ -49,7 +49,7 @@ class CourseInformation:
                 if form.is_valid():
                     form.save()
                 else:
-                    return HttpResponse("Bad input, try again")
+                    return HttpResponse("Course bad input, try again")
             if 'lab-add' in request.POST:
                 context['add'] = 'add_lab'
                 return render(request, 'course/course_assignments.html', context)
@@ -59,11 +59,11 @@ class CourseInformation:
                 print(course_name)
                 my_course = Course.objects.get(name=course_name)
                 print(my_course)
-                form = CreateLab(my_course, request.POST)
+                form = LabCreation(my_course, request.POST)
                 if form.is_valid():
                     form.save()
                 else:
-                    return HttpResponse("Bad input, try again")
+                    return HttpResponse("Lab bad input, try again")
             if 'section-add' in request.POST:
                 context['add'] = 'add_section'
                 return render(request, 'course/course_assignments.html', context)
@@ -73,11 +73,11 @@ class CourseInformation:
                 print(course_name)
                 my_course = Course.objects.get(name=course_name)
                 print(my_course)
-                form = CreateSection(my_course, request.POST)
+                form = SectionCreation(my_course, request.POST)
                 if form.is_valid():
                     form.save()
                 else:
-                    return HttpResponse("Bad input, try again")
+                    return HttpResponse("Section bad input, try again")
         return render(request, 'course/course_assignments.html', context)
 
     def course_creation(request):
@@ -96,27 +96,27 @@ class CourseInformation:
         if not request.user.is_authenticated:
             return redirect('login')
         if request.method == "POST":
-            form = Section_Creation(request.POST)
+            form = SectionCreation(request.POST)
 
             if form.is_valid():
                 form.save()
 
                 return redirect('course_assignment')
         else:
-            form = Section_Creation()
+            form = SectionCreation()
         return render(request, 'section_creation.html', {'form': form})
     def lab_creation(request):
         if not request.user.is_authenticated:
             return redirect('login')
         if request.method == "POST":
-            form = Lab_Creation(request.POST)
+            form = LabCreation(request.POST)
 
             if form.is_valid():
                 form.save()
 
                 return redirect('course_assignment')
         else:
-            form = Lab_Creation()
+            form = LabCreation()
         return render(request, 'lab_creation.html', {'form': form})
 
     def delete_course(request, course):
@@ -125,6 +125,20 @@ class CourseInformation:
             del_course.delete()
             return redirect('/course_information/')
         return render(request, 'course/confirm_course_delete.html')
+
+    def delete_lab(request, lab):
+        del_lab = Lab.objects.get(lab_name=lab)
+        if request.method == 'POST':
+            del_lab.delete()
+            return redirect('/course_information/')
+        return render(request, 'course/confirm_lab_delete.html')
+
+    def delete_section(request, section):
+        del_section = Section.objects.get(section_name=section)
+        if request.method == 'POST':
+            del_section.delete()
+            return redirect('/course_information/')
+        return render(request, 'course/confirm_section_delete.html')
 
     def assign_Tas(request, course):
         if not request.user.is_authenticated:

@@ -9,7 +9,7 @@
 <body>
     <h1>Create a New Section</h1>
     <form method="post" action="{% url 'section_creation' %}">
-    
+        {% csrf_token %}
         {{ form.non_field_errors }}
         {{ form.course.errors }}
         {{ form.course.label_tag }} {{ form.course }}<br>

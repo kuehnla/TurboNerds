@@ -7,11 +7,14 @@ class ROLES(models.TextChoices):
     Instructor = "Instructor"
     TA = "TA"
 
+
 class Semester(models.TextChoices):
     Spring = "Spring"
     Summer = "Summer"
     Winter = "Winter"
     Fall = "Fall"
+
+
 class Department(models.TextChoices):
     ACTUARIAL_SCIENCE = 'ACTSCI', 'Actuarial Science'
     ADMINISTRATIVE_LEADERSHIP = 'AD_LDSP', 'Administrative Leadership'
@@ -86,6 +89,7 @@ class Department(models.TextChoices):
     INTERNATIONAL_STUDIES = 'INTLST', 'International Studies'
     ITALIAN = 'ITALIAN', 'Italian'
 
+
 class Number(models.TextChoices):
     SECTION_001 = '001'
     SECTION_002 = '002'
@@ -153,7 +157,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 class Course(models.Model):
     department = models.CharField(max_length=20, choices=Department.choices, default="COMPSCI")
-    number =  models.IntegerField()
+    number = models.IntegerField()
     name = models.CharField(max_length=30)
     semester = models.CharField(max_length=20, choices=Semester.choices, default="Fall")
 
