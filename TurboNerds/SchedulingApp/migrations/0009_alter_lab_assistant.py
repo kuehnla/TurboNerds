@@ -8,7 +8,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('SchedulingApp', '0008_supervisor_alter_section_alter_section_section_name'),
+        ('SchedulingApp', '0008_supervisor_alter_section_section_name'),
     ]
 
     operations = [
