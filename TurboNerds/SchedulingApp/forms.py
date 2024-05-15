@@ -48,15 +48,14 @@ class EditProfileForm(ModelForm):
 
 class TaAssignment(forms.ModelForm):
     ta = forms.ModelChoiceField(queryset=User.objects.filter(is_assistant=True))
-    lab = forms.ModelChoiceField(queryset=Lab.objects.all())
 
     class Meta:
         model = Lab
-        fields = ['ta', 'lab']
+        fields = ['ta']
 
     def __init__(self, course, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['lab'].queryset = Lab.objects.filter(course=course)
+
 
 
 class InstructorAssignment(forms.ModelForm):
@@ -149,35 +148,36 @@ class SectionCreation(forms.ModelForm):
             instance.save()
         return instance
 
-class CreateLab(forms.ModelForm):
-    class Meta:
-        model = Lab
-        fields = ['assistant', 'lab_name', 'start_time', 'end_time', 'days']
 
-    def __init__(self, course, *args, **kwargs):
-        super(CreateLab, self).__init__(*args, **kwargs)
-        self.course_id = course
-
-    def save(self, commit=True):
-        instance = super(CreateLab, self).save(commit=False)
-        instance.course = self.course_id
-        if commit:
-            instance.save()
-        return instance
-
-
-class CreateSection(forms.ModelForm):
-    class Meta:
-        model = Section
-        fields = ['instructor', 'start_date', 'end_date', 'start_time', 'end_time', 'days']
-
-    def __init__(self, course, *args, **kwargs):
-        super(CreateSection, self).__init__(*args, **kwargs)
-        self.course_id = course
-
-    def save(self, commit=True):
-        instance = super(CreateSection, self).save(commit=False)
-        instance.course = self.course_id
-        if commit:
-            instance.save()
-        return instance
+# class CreateLab(forms.ModelForm):
+#     class Meta:
+#         model = Lab
+#         fields = ['assistant', 'lab_name', 'start_time', 'end_time', 'days']
+#
+#     def __init__(self, course, *args, **kwargs):
+#         super(CreateLab, self).__init__(*args, **kwargs)
+#         self.course_id = course
+#
+#     def save(self, commit=True):
+#         instance = super(CreateLab, self).save(commit=False)
+#         instance.course = self.course_id
+#         if commit:
+#             instance.save()
+#         return instance
+#
+#
+# class CreateSection(forms.ModelForm):
+#     class Meta:
+#         model = Section
+#         fields = ['instructor', 'start_date', 'end_date', 'start_time', 'end_time', 'days']
+#
+#     def __init__(self, course, *args, **kwargs):
+#         super(CreateSection, self).__init__(*args, **kwargs)
+#         self.course_id = course
+#
+#     def save(self, commit=True):
+#         instance = super(CreateSection, self).save(commit=False)
+#         instance.course = self.course_id
+#         if commit:
+#             instance.save()
+#         return instance
