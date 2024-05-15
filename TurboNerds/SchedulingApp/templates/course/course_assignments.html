@@ -31,15 +31,18 @@
                 </div>
             </div>
         {% else %}
-            <button name="course-add">Add Course</button>
+            <button name="course-add" style="background-color:#6FC276">Add Course <img src="{% static 'assets/add-circle.svg' %}" alt="trash" width="20px"></button>
         {% endif %}
     </form>
     {% if courses %}
       {% for course in courses %}
+        <div class="course_container">
+        <div class="nameremove">
           <h2>{{ course.name }} ({{ course.department }} {{ course.number }})</h2>
           <div class="remove">
-            <a id="delete" href="{% url 'delete_course' course.name %}">Delete</a>
+            <a id="delete" href="{% url 'delete_course' course.name %}"><img src="{% static 'assets/trash.svg' %}" alt="trash" width="25px"></a>
           </div>
+        </div>
           {% if course.lab_set.all %}
             <h3>Labs:</h3>
             <table>
@@ -48,17 +51,16 @@
                 <th>Lab section</th>
                 <th>Times</th>
                 <th>Days</th>
-                <th>Remove</th>
               </tr>
               {% for lab in course.lab_set.all %}
                 <tr>
-                  <td>{{ lab.assistant.first_name }} {{ lab.assistant.last_name }} <a href="{% url 'assign_ta' course.name lab.lab_name %}">Change</a></td>
+                  <td>{{ lab.assistant.first_name }} {{ lab.assistant.last_name }} <a href="{% url 'assign_ta' course.name lab.lab_name %}"><img src="{% static 'assets/pencil.svg' %}" alt="trash" width="25px"></a></td>
                   <td>{{ lab.lab_name }}</td>
                   <td>{{ lab.start_time }} - {{ lab.end_time }}</td>
                   <td>{{ lab.days }}</td>
                   <td>
                       <div class="remove">
-                        <a id="delete" href="{% url 'delete_lab' lab.lab_name %}">Delete</a>
+                        <a id="delete" href="{% url 'delete_lab' lab.lab_name %}"><img src="{% static 'assets/trash.svg' %}" alt="trash" width="25px"></a>
                       </div>
                   </td>
                 </tr>
@@ -83,7 +85,7 @@
                         </div>
                     </div>
                 {% else %}
-                    <button name="lab-add">Add Lab</button>
+                    <button name="lab-add" style="background-color:#6FC276">Add Lab<img src="{% static 'assets/add-circle.svg' %}" alt="trash" width="20px"></button>
                 {% endif %}
             </form>
           {% if course.section_set.all %}
@@ -103,7 +105,7 @@
                   <td>{{ section.days }}</td>
                   <td>
                       <div class="remove">
-                        <a id="delete" href="{% url 'delete_section' section.section_name %}">Delete</a>
+                        <a id="delete" href="{% url 'delete_section' section.section_name %}"><img src="{% static 'assets/trash.svg' %}" alt="trash" width="25px"></a>
                       </div>
                   </td>
                 </tr>
@@ -128,10 +130,11 @@
                     </div>
                 </div>
             {% else %}
-                <button name="section-add">Add Section</button>
+                <button name="section-add" style="background-color:#6FC276">Add Section<img src="{% static 'assets/add-circle.svg' %}" alt="trash" width="20px"></button>
             {% endif %}
           </form>
           <br>
+        </div>
       {% endfor %}
     {% else %}
       <h2>No courses at this time.</h2>

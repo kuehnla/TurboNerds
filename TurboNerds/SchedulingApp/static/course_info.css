@@ -66,10 +66,6 @@ h2 {
     font-weight: bolder;
 }
 
-.course_container {
-    padding-bottom: 32px;
-}
-
 .none {
     margin-top: 12px;
     background-color: #f2f2f2;
@@ -114,4 +110,35 @@ form {
 #id_start_time,
 #id_end_time {
     width: 140px;
+}
+
+.remove {
+    display: flex;
+    justify-content: flex-end;
+    height: 40px;
+    grid-column: 3 / 4;
+    grid-row: 1 / 2;
+    gap: 4px;
+    align-items: center;
+    margin-right: 8px;
+}
+
+#delete {
+    background-color: #DC3545;
+    color: white;
+    border-radius: 8px;
+    border: none;
+    padding: 6px 8px;
+    font-weight: bolder;
+}
+
+.nameremove {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.course_container {
+    border-bottom: 1px solid grey;
+    margin-bottom: 16px;
 }
