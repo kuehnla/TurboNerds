@@ -15,24 +15,26 @@
   </head>
   <h1>Course Information</h1>
   <div class="container">
-    {% if courses %}
-        <form method="post" action="{% url 'course_assignment' %}" novalidate>{% csrf_token %}
-        {% if add == 'add' %}
+  <form method="post" action="{% url 'course_assignment' %}" novalidate>
+        {% csrf_token %}
+        {% if add == 'add_course' %}
             <div class="form-container">
                 <div class="entries">
-                    {% for field in form %}
+                    {% for field in course_form %}
                         <div class="entry">
+                            {{ course }}
                             {{ field }}
                         </div>
                     {% endfor %}
-                    <button name="save">Save</button>
-                    <a href="/home/"><button>Cancel</button></a>
+                    <button name="course-save">Save</button>
+                    <button>Cancel</button>
                 </div>
             </div>
         {% else %}
-            <button name="add">Add Course</button>
+            <button name="course-add">Add Course</button>
         {% endif %}
-        </form>
+    </form>
+    {% if courses %}
       {% for course in courses %}
           <h2>{{ course.name }} ({{ course.department }} {{ course.number }})</h2>
           <div class="remove">
@@ -46,6 +48,7 @@
                 <th>Lab section</th>
                 <th>Times</th>
                 <th>Days</th>
+                <th>Remove</th>
               </tr>
               {% for lab in course.lab_set.all %}
                 <tr>
@@ -53,13 +56,36 @@
                   <td>{{ lab.lab_name }}</td>
                   <td>{{ lab.start_time }} - {{ lab.end_time }}</td>
                   <td>{{ lab.days }}</td>
+                  <td>
+                      <div class="remove">
+                        <a id="delete" href="{% url 'delete_lab' lab.lab_name %}">Delete</a>
+                      </div>
+                  </td>
                 </tr>
               {% endfor %}
             </table>
           {% else %}
             <p class="none">No labs at this time.</p>
           {% endif %}
-
+            <form method="post" action="{% url 'course_assignment' %}" novalidate>
+                {% csrf_token %}
+                <input type="hidden" name="lab_course_name" value="{{ course.name }}">
+                {% if add == 'add_lab' %}
+                    <div class="form-container">
+                        <div class="entries">
+                            {% for field in lab_form %}
+                                <div class="entry">
+                                    {{ field }}
+                                </div>
+                            {% endfor %}
+                            <button name="lab-save">Save</button>
+                            <button>Cancel</button>
+                        </div>
+                    </div>
+                {% else %}
+                    <button name="lab-add">Add Lab</button>
+                {% endif %}
+            </form>
           {% if course.section_set.all %}
 
             <table>
@@ -74,14 +100,38 @@
                 <tr>
                   <td>{{ section.instructor.get_full_name }}</td>
                   <td>{{ section.start_date }} - {{ section.end_date }}</td>
-                  <td>Start Time: {{ section.start_time }} - {{ section.end_time }}</td>
+                  <td>{{ section.start_time }} - {{ section.end_time }}</td>
                   <td>{{ section.days }}</td>
+                  <td>
+                      <div class="remove">
+                        <a id="delete" href="{% url 'delete_section' section.section_name %}">Delete</a>
+                      </div>
+                  </td>
                 </tr>
               {% endfor %}
             </table>
           {% else %}
             <p class="none">No sections at this time.</p>
           {% endif %}
+          <form method="post" action="{% url 'course_assignment' %}" novalidate>
+            {% csrf_token %}
+            <input type="hidden" name="section_course_name" value="{{ course.name }}">
+            {% if add == 'add_section' %}
+                <div class="form-container">
+                    <div class="entries">
+                        {% for field in section_form %}
+                            <div class="entry">
+                                {{ field }}
+                            </div>
+                        {% endfor %}
+                        <button name="section-save">Save</button>
+                        <button>Cancel</button>
+                    </div>
+                </div>
+            {% else %}
+                <button name="section-add">Add Section</button>
+            {% endif %}
+          </form>
           <br>
       {% endfor %}
     {% else %}

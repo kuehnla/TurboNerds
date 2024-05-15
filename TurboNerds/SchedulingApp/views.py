@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
-from .forms import RegistrationForm, EditProfileForm, TaAssignment, InstructorAssignment, CreateCourse, Lab_Creation, Section_Creation
+from .forms import RegistrationForm, EditProfileForm, TaAssignment, InstructorAssignment, CreateCourse, LabCreation, \
+    SectionCreation, CreateSection, CreateLab
 from .models import User, Course, Section, Lab
 from django.db.models import Prefetch
 from django.conf import settings
@@ -28,25 +29,56 @@ class CourseInformation:
     def course_assignment(request):
         if not request.user.is_authenticated:
             return redirect('login')
+        context = {}
         courses = Course.objects.prefetch_related(
             Prefetch('lab_set', queryset=Lab.objects.order_by('start_time')),
             Prefetch('section_set', queryset=Section.objects.order_by('start_date'))
         ).all()
+        context['courses'] = courses
+        context['course_form'] = CreateCourse()
+        context['lab_form'] = LabCreation(request.POST.get('course_name'))
+        context['section_form'] = SectionCreation(request.POST.get('course_name'))
 
-        form = CreateCourse()
         if request.method == 'POST':
-            if 'cancel' in request.POST:
-                return redirect('home')
-            if 'add' in request.POST:
-                add = 'add'
-                return render(request, 'course_creation.html', {'courses': courses, 'form': form, 'add': add})
-            if 'save' in request.POST:
+            if 'course-add' in request.POST:
+                context['add'] = 'add_course'
+                return render(request, 'course/course_assignments.html', context)
+            if 'course-save' in request.POST:
                 form = CreateCourse(request.POST)
-                form.save()
-        if request.method == 'GET':
-            if 'cancel' in request.GET:
-                return redirect('home')
-        return render(request, 'course/course_assignments.html', {'courses': courses, 'form': form})
+                if form.is_valid():
+                    form.save()
+                else:
+                    return HttpResponse("Course bad input, try again")
+            if 'lab-add' in request.POST:
+                context['add'] = 'add_lab'
+                return render(request, 'course/course_assignments.html', context)
+            if 'lab-save' in request.POST:
+                print(request.POST)
+                course_name = request.POST.get('lab_course_name')
+                print(course_name)
+                my_course = Course.objects.get(name=course_name)
+                print(my_course)
+                form = LabCreation(my_course, request.POST)
+                if form.is_valid():
+                    form.save()
+                else:
+                    return HttpResponse("Lab bad input, try again")
+            if 'section-add' in request.POST:
+                context['add'] = 'add_section'
+                return render(request, 'course/course_assignments.html', context)
+            if 'section-save' in request.POST:
+                print(request.POST)
+                course_name = request.POST.get('section_course_name')
+                print(course_name)
+                my_course = Course.objects.get(name=course_name)
+                print(my_course)
+                form = SectionCreation(my_course, request.POST)
+                if form.is_valid():
+                    form.save()
+                else:
+                    return HttpResponse("Section bad input, try again")
+        return render(request, 'course/course_assignments.html', context)
+
     def course_creation(request):
         if not request.user.is_authenticated:
             return redirect('login')
@@ -63,34 +95,49 @@ class CourseInformation:
         if not request.user.is_authenticated:
             return redirect('login')
         if request.method == "POST":
-            form = Section_Creation(request.POST)
+            form = SectionCreation(request.POST)
 
             if form.is_valid():
                 form.save()
 
                 return redirect('course_assignment')
         else:
-            form = Section_Creation()
+            form = SectionCreation()
         return render(request, 'section_creation.html', {'form': form})
     def lab_creation(request):
         if not request.user.is_authenticated:
             return redirect('login')
         if request.method == "POST":
-            form = Lab_Creation(request.POST)
+            form = LabCreation(request.POST)
 
             if form.is_valid():
                 form.save()
 
                 return redirect('course_assignment')
         else:
-            form = Lab_Creation()
+            form = LabCreation()
         return render(request, 'lab_creation.html', {'form': form})
+
     def delete_course(request, course):
         del_course = Course.objects.get(name=course)
         if request.method == 'POST':
             del_course.delete()
-            return redirect('/course_information')
+            return redirect('/course_information/')
         return render(request, 'course/confirm_course_delete.html')
+
+    def delete_lab(request, lab):
+        del_lab = Lab.objects.get(lab_name=lab)
+        if request.method == 'POST':
+            del_lab.delete()
+            return redirect('/course_information/')
+        return render(request, 'course/confirm_lab_delete.html')
+
+    def delete_section(request, section):
+        del_section = Section.objects.get(section_name=section)
+        if request.method == 'POST':
+            del_section.delete()
+            return redirect('/course_information/')
+        return render(request, 'course/confirm_section_delete.html')
 
     def assign_Tas(request, course):
         if not request.user.is_authenticated:
@@ -193,7 +240,6 @@ class ProfileModification:
                 User.objects.filter(email=email).update(first_name=user.first_name,
                                                         last_name=user.last_name, email=user.email, phone=user.phone)
                 return redirect('user_information')
-
         else:
 
             user = User.objects.get(email=email)
