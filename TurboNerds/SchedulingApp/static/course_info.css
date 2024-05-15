@@ -79,4 +79,39 @@ h2 {
 
 .entries {
     display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+#id_days  {
+    display: flex;
+    gap: 8px;
+}
+
+select {
+    height: 30px;
+    width: 140px;
+}
+
+button {
+    border: none;
+    border-radius: 6px;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+    padding: 4px 16px;
+}
+
+button:hover {
+    outline: 1px solid black;
+}
+
+form {
+    margin-top: 16px;
+    margin-bottom: 16px;
+}
+
+#id_start_date,
+#id_end_date,
+#id_start_time,
+#id_end_time {
+    width: 140px;
 }
