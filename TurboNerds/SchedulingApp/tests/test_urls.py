@@ -26,7 +26,7 @@ class TestUrls(SimpleTestCase):
 
     def test_assign_ta_urls_resolves(self):
         url = reverse('assign_ta', args=['nate@uwm.edu'])
-        self.assertEqual(resolve(url).func, CourseInformation.assign_Tas)
+        self.assertEqual(resolve(url).func, CourseInformation.assign_tas)
 
     def test_logout_urls_resolves(self):
         url = reverse('logout')

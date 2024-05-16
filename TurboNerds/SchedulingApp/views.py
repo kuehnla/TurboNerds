@@ -1,16 +1,12 @@
 from django.shortcuts import render, redirect
 from .forms import RegistrationForm, EditProfileForm, TaAssignment, InstructorAssignment, CreateCourse, LabCreation, \
     SectionCreation, TaAssignmentForInstructor
-from .models import User, Course, Section, Lab
 from django.db.models import Prefetch
-from django.conf import settings
 from django.contrib import messages
-from django.contrib.auth import update_session_auth_hash
-from django.contrib.auth import views as auth_views
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import logout
 from django.contrib.auth.views import LoginView
 from django.urls import reverse_lazy
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponse
 from .default_user import Users
 from .supervisor import *
 
@@ -79,45 +75,6 @@ class CourseInformation:
                     return HttpResponse("Section bad input, try again")
         return render(request, 'course/course_assignments.html', context)
 
-    def course_creation(request):
-        if not request.user.is_authenticated:
-            return redirect('login')
-        if request.method == "POST":
-            form = CreateCourse(request.POST)
-
-            if form.is_valid():
-                form.save()
-                return redirect('course_assignment')
-        else:
-            form = CreateCourse()
-        return render(request, 'course_creation.html', {'form': form})
-    def section_creation(request):
-        if not request.user.is_authenticated:
-            return redirect('login')
-        if request.method == "POST":
-            form = SectionCreation(request.POST)
-
-            if form.is_valid():
-                form.save()
-
-                return redirect('course_assignment')
-        else:
-            form = SectionCreation()
-        return render(request, 'section_creation.html', {'form': form})
-    def lab_creation(request):
-        if not request.user.is_authenticated:
-            return redirect('login')
-        if request.method == "POST":
-            form = LabCreation(request.POST)
-
-            if form.is_valid():
-                form.save()
-
-                return redirect('course_assignment')
-        else:
-            form = LabCreation()
-        return render(request, 'lab_creation.html', {'form': form})
-
     def delete_course(request, course):
         del_course = Course.objects.get(name=course)
         if request.method == 'POST':
@@ -139,7 +96,7 @@ class CourseInformation:
             return redirect('/course_information/')
         return render(request, 'course/confirm_section_delete.html')
 
-    def assign_Tas(request, course, lab):
+    def assign_tas(request, course, lab):
         if not request.user.is_authenticated:
             return redirect('login')
         my_course = Course.objects.get(name=course)
@@ -152,7 +109,7 @@ class CourseInformation:
             return redirect('course_assignment')
         return render(request, 'course/ta_assignments.html', {'form': form})
 
-    def assign_TasForInstructor(request, course):
+    def assign_tas_for_instructor(request, course):
         if not request.user.is_authenticated:
             return redirect('login')
         my_course = Course.objects.get(name=course)
@@ -212,15 +169,15 @@ class ProfileModification:
 
                 if role == 'Instructor':
                     User.objects.filter(email=new_email).update(is_instructor=True, is_admin=False,
-                                                                   is_assistant=False)
+                                                                is_assistant=False)
 
                 elif role == 'Supervisor':
                     User.objects.filter(email=new_email).update(is_instructor=False, is_admin=True,
-                                                                   is_assistant=False)
+                                                                is_assistant=False)
 
                 else:
                     User.objects.filter(email=new_email).update(is_instructor=False, is_admin=False,
-                                                                   is_assistant=True)
+                                                                is_assistant=True)
 
                 return redirect('user_information')
         else:
@@ -271,12 +228,12 @@ class CustomLoginView(LoginView):
         # Get the user object after successful login
         user = self.request.user
 
-
         if user.is_authenticated:
             return reverse_lazy('home')
 
         # If the user's role is not defined, redirect to some default URL
         return reverse_lazy('default_home')
+
 
 class SuccessEdit:
     def success(request):

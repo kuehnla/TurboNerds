@@ -5,7 +5,8 @@
 
   <form method="post" action="">
     {% csrf_token %}
-    <h1>Are you sure you want to delete?</h1><br>
+    <h1>Are you sure you want to delete?</h1>
+    <h3>Warning: this will delete all labs and sections associated with this course</h3><br>
     <input class="btn btn-danger" type="submit" value="Yes"/>
     <a href="/course_information/">
       <div class="btn btn-primary">Cancel</div>

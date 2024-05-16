@@ -132,7 +132,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
-    # password = models.CharField(max_length=20)
     phone = models.CharField(max_length=11)
     role = models.CharField(max_length=20, choices=ROLES.choices, default="TA")
     is_instructor = models.BooleanField(default=False)
@@ -181,12 +180,6 @@ class Lab(models.Model):
     def __str__(self):
         return self.lab_name
 
-    # def get_days(self):
-    #     result = ""
-    #     for day in self.days:
-    #         result = result + "/" + day
-    #     return "result"
-
 
 class Section(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
@@ -205,6 +198,3 @@ class Section(models.Model):
 
     def __str__(self):
         return self.section_name
-
-    # def get_days(self):
-    #     return self.days[0] + "/" + self.days[1]

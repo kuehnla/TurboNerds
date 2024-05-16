@@ -1,15 +1,9 @@
 from django import forms
 from django.contrib.auth import get_user_model
-from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+from django.contrib.auth.forms import UserCreationForm
 from django.forms import ModelForm
 from .models import User, Lab, Section, Course
 from django.forms.widgets import DateInput
-
-
-# use of django forms
-# from .models import User
-
-# use of django forms
 
 
 class RegistrationForm(UserCreationForm):
@@ -155,39 +149,6 @@ class SectionCreation(forms.ModelForm):
             instance.save()
         return instance
 
-
-# class CreateLab(forms.ModelForm):
-#     class Meta:
-#         model = Lab
-#         fields = ['assistant', 'lab_name', 'start_time', 'end_time', 'days']
-#
-#     def __init__(self, course, *args, **kwargs):
-#         super(CreateLab, self).__init__(*args, **kwargs)
-#         self.course_id = course
-#
-#     def save(self, commit=True):
-#         instance = super(CreateLab, self).save(commit=False)
-#         instance.course = self.course_id
-#         if commit:
-#             instance.save()
-#         return instance
-#
-#
-# class CreateSection(forms.ModelForm):
-#     class Meta:
-#         model = Section
-#         fields = ['instructor', 'start_date', 'end_date', 'start_time', 'end_time', 'days']
-#
-#     def __init__(self, course, *args, **kwargs):
-#         super(CreateSection, self).__init__(*args, **kwargs)
-#         self.course_id = course
-#
-#     def save(self, commit=True):
-#         instance = super(CreateSection, self).save(commit=False)
-#         instance.course = self.course_id
-#         if commit:
-#             instance.save()
-#         return instance
 
 class TaAssignmentForInstructor(forms.ModelForm):
     ta = forms.ModelChoiceField(queryset=User.objects.filter(is_assistant=True))
