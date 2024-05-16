@@ -58,7 +58,11 @@
               </tr>
               {% for lab in course.lab_set.all %}
                 <tr>
-                  <td>{{ lab.assistant.first_name }} {{ lab.assistant.last_name }} <a href="{% url 'assign_ta' course.name lab.lab_name %}"><img src="{% static 'assets/pencil.svg' %}" alt="trash" width="25px"></a></td>
+                  <td>{{ lab.assistant.first_name }} {{ lab.assistant.last_name }} 
+                      {% if request.user.is_admin %}
+                      <a href="{% url 'assign_ta' course.name lab.lab_name %}"><img src="{% static 'assets/pencil.svg' %}" alt="trash" width="25px"></a>
+                      {% endif %}
+                  </td>
                   <td>{{ lab.lab_name }}</td>
                   <td>{{ lab.start_time }} - {{ lab.end_time }}</td>
                   <td>{{ lab.days }}</td>
@@ -107,7 +111,11 @@
               </tr>
               {% for section in course.section_set.all %}
                 <tr>
-                  <td>{{ section.instructor.get_full_name }} <a href="{% url 'assign_instructor' section.section_name %}"><img src="{% static 'assets/pencil.svg' %}" alt="trash" width="25px"></a></td>
+                  <td>{{ section.instructor.get_full_name }}
+                      {% if request.user.is_admin %}
+                      <a href="{% url 'assign_instructor' section.section_name %}"><img src="{% static 'assets/pencil.svg' %}" alt="trash" width="25px"></a>
+                      {% endif %}
+                  </td>
                   <td>{{ section.start_date }} - {{ section.end_date }}</td>
                   <td>{{ section.start_time }} - {{ section.end_time }}</td>
                   <td>{{ section.days }}</td>
