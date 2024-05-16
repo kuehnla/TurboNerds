@@ -157,7 +157,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 class Course(models.Model):
     department = models.CharField(max_length=20, choices=Department.choices, default="COMPSCI")
     number = models.IntegerField()
-    name = models.CharField(max_length=30)
+    name = models.CharField(max_length=30, default="Course Name")
     semester = models.CharField(max_length=20, choices=Semester.choices, default="Fall")
 
     def __str__(self):
@@ -173,8 +173,8 @@ class Lab(models.Model):
     )
     lab_name = models.CharField(max_length=20, choices=Number.choices, default="001")
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
-    start_time = models.TimeField()
-    end_time = models.TimeField()
+    start_time = models.TimeField(default="13:00:00")
+    end_time = models.TimeField(default="15:20:00")
     days = models.CharField(max_length=13, default="Mo/We")
 
     def __str__(self):
@@ -192,8 +192,8 @@ class Section(models.Model):
     section_name = models.CharField(max_length=20, choices=Number.choices, default="001")
     start_date = models.DateField()
     end_date = models.DateField()
-    start_time = models.TimeField()
-    end_time = models.TimeField()
+    start_time = models.TimeField(default="13:00:00")
+    end_time = models.TimeField(default="14:15:00")
     days = models.CharField(max_length=13, default="Tu Th")
 
     def __str__(self):
