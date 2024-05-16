@@ -1,16 +1,12 @@
 from django.shortcuts import render, redirect
 from .forms import RegistrationForm, EditProfileForm, TaAssignment, InstructorAssignment, CreateCourse, LabCreation, \
-    SectionCreation
-from .models import User, Course, Section, Lab
+    SectionCreation, TaAssignmentForInstructor
 from django.db.models import Prefetch
-from django.conf import settings
 from django.contrib import messages
-from django.contrib.auth import update_session_auth_hash
-from django.contrib.auth import views as auth_views
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import logout
 from django.contrib.auth.views import LoginView
 from django.urls import reverse_lazy
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponse
 from .default_user import Users
 from .supervisor import *
 
@@ -50,28 +46,24 @@ class CourseInformation:
                 else:
                     return HttpResponse("Course bad input, try again")
             if 'lab-add' in request.POST:
+                context['pk_lab'] = int(request.POST.get('lab-add'))
                 context['add'] = 'add_lab'
                 return render(request, 'course/course_assignments.html', context)
             if 'lab-save' in request.POST:
-                print(request.POST)
                 course_name = request.POST.get('lab_course_name')
-                print(course_name)
                 my_course = Course.objects.get(name=course_name)
-                print(my_course)
                 form = LabCreation(my_course, request.POST)
                 if form.is_valid():
                     form.save()
                 else:
                     return HttpResponse("Lab bad input, try again")
             if 'section-add' in request.POST:
+                context['pk_section'] = int(request.POST.get('section-add'))
                 context['add'] = 'add_section'
                 return render(request, 'course/course_assignments.html', context)
             if 'section-save' in request.POST:
-                print(request.POST)
                 course_name = request.POST.get('section_course_name')
-                print(course_name)
                 my_course = Course.objects.get(name=course_name)
-                print(my_course)
                 form = SectionCreation(my_course, request.POST)
                 if form.is_valid():
                     form.save()
@@ -79,99 +71,58 @@ class CourseInformation:
                     return HttpResponse("Section bad input, try again")
         return render(request, 'course/course_assignments.html', context)
 
-    def course_creation(request):
+    def delete_course(request, id):
         if not request.user.is_authenticated:
             return redirect('login')
-        if request.method == "POST":
-            form = CreateCourse(request.POST)
-
-            if form.is_valid():
-                form.save()
-                return redirect('course_assignment')
-        else:
-            form = CreateCourse()
-        return render(request, 'course_creation.html', {'form': form})
-    def section_creation(request):
-        if not request.user.is_authenticated:
-            return redirect('login')
-        if request.method == "POST":
-            form = SectionCreation(request.POST)
-
-            if form.is_valid():
-                form.save()
-
-                return redirect('course_assignment')
-        else:
-            form = SectionCreation()
-        return render(request, 'section_creation.html', {'form': form})
-    def lab_creation(request):
-        if not request.user.is_authenticated:
-            return redirect('login')
-        if request.method == "POST":
-            form = LabCreation(request.POST)
-
-            if form.is_valid():
-                form.save()
-
-                return redirect('course_assignment')
-        else:
-            form = LabCreation()
-        return render(request, 'lab_creation.html', {'form': form})
-
-    def delete_course(request, course):
-        del_course = Course.objects.get(name=course)
+        del_course = Course.objects.get(id=id)
         if request.method == 'POST':
             del_course.delete()
             return redirect('/course_information/')
         return render(request, 'course/confirm_course_delete.html')
 
-    def delete_lab(request, lab):
-        del_lab = Lab.objects.get(lab_name=lab)
+    def delete_lab(request, id):
+        if not request.user.is_authenticated:
+            return redirect('login')
+        del_lab = Lab.objects.get(id=id)
         if request.method == 'POST':
             del_lab.delete()
             return redirect('/course_information/')
         return render(request, 'course/confirm_lab_delete.html')
 
-    def delete_section(request, section):
-        del_section = Section.objects.get(section_name=section)
+    def delete_section(request, id):
+        if not request.user.is_authenticated:
+            return redirect('login')
+        del_section = Section.objects.get(id=id)
         if request.method == 'POST':
             del_section.delete()
             return redirect('/course_information/')
         return render(request, 'course/confirm_section_delete.html')
 
-    def assign_Tas(request, course, lab):
+    def assign_tas(request, course, lab):
         if not request.user.is_authenticated:
             return redirect('login')
         my_course = Course.objects.get(name=course)
         my_lab = Lab.objects.get(lab_name=lab)
+        form = TaAssignment(my_course, my_lab, request.POST, instance=my_lab)
+        if request.method == 'POST':
+            assistant = User.objects.get(id=request.POST.get("ta"))
+            my_lab.assistant = assistant
+            my_lab.save()
+            return redirect('course_assignment')
+        return render(request, 'course/ta_assignments.html', {'form': form})
+
+    def assign_tas_for_instructor(request, course):
+        if not request.user.is_authenticated:
+            return redirect('login')
+        my_course = Course.objects.get(name=course)
         labs = my_course.lab_set
-        print(labs)
+        form = TaAssignmentForInstructor(my_course)
         if not labs:
             messages.error(request, 'No labs assigned to this course')
             return HttpResponse("<h1>No labs for this course</h1><a href='/'><button>back</button></a>")
 
         if request.method == 'POST':
-            form = TaAssignment(my_course, my_lab, request.POST)
-            if form.is_valid():
-                lab.save()
-                messages.success(request, 'TA successfully assigned to lab.')
-                return redirect('course_assignment')
-        else:
-            form = TaAssignment(my_course)
-        return render(request, 'course/ta_assignments.html', {'form': form})
-
-    def assign_instructor(request, course):
-        if not request.user.is_authenticated:
-            return redirect('login')
-        my_course = Course.objects.get(name=course)
-        labs = my_course.lab_set
-        if not labs:
-            messages.error(request, 'No labs assigned to this course')
-            return HttpResponse("<h1>Page not found</h1>")
-
-            # return redirect('home')
-        if request.method == 'POST':
-            form = InstructorAssignment(course, request.POST)
+            form = TaAssignmentForInstructor(my_course, request.POST)
             if form.is_valid():
                 ta = form.cleaned_data['ta']
                 lab = form.cleaned_data['lab']
@@ -179,8 +130,20 @@ class CourseInformation:
                 lab.save()
                 messages.success(request, 'TA successfully assigned to lab.')
                 return redirect('course_assignment')
-        else:
-            form = InstructorAssignment(my_course)
+        return render(request, 'course/ta_assignments.html', {'form': form})
+
+    def assign_instructor(request, section):
+        if not request.user.is_authenticated:
+            return redirect('login')
+        my_section = Section.objects.get(section_name=section)
+
+        form = InstructorAssignment(my_section, request.POST, instance=my_section)
+        if request.method == 'POST':
+            print(request.POST)
+            instructor = User.objects.get(id=request.POST.get("instructor"))
+            my_section.instructor = instructor
+            my_section.save()
+            return redirect('course_assignment')
         return render(request, 'course/instructor_assignment.html', {'form': form})
 
     def read_information(request):
@@ -193,7 +156,6 @@ class CourseInformation:
 
 class ProfileModification:
     def register(request):
-        # submitted = False
         if not request.user.is_authenticated:
             return redirect('login')
 
@@ -207,15 +169,15 @@ class ProfileModification:
 
                 if role == 'Instructor':
                     User.objects.filter(email=new_email).update(is_instructor=True, is_admin=False,
-                                                                   is_assistant=False)
+                                                                is_assistant=False)
 
                 elif role == 'Supervisor':
                     User.objects.filter(email=new_email).update(is_instructor=False, is_admin=True,
-                                                                   is_assistant=False)
+                                                                is_assistant=False)
 
                 else:
                     User.objects.filter(email=new_email).update(is_instructor=False, is_admin=False,
-                                                                   is_assistant=True)
+                                                                is_assistant=True)
 
                 return redirect('user_information')
         else:
@@ -247,6 +209,8 @@ class ProfileModification:
         return render(request, 'accounts/edit_profile.html', {'login': user, 'form': form})
 
     def delete_user(request, email):
+        if not request.user.is_authenticated:
+            return redirect('login')
         del_user = User.objects.get(email=email)
         if request.method == 'POST':
             del_user.delete()
@@ -266,13 +230,8 @@ class CustomLoginView(LoginView):
         # Get the user object after successful login
         user = self.request.user
 
-
         if user.is_authenticated:
             return reverse_lazy('home')
 
         # If the user's role is not defined, redirect to some default URL
         return reverse_lazy('default_home')
-
-class SuccessEdit:
-    def success(request):
-        pass
