@@ -83,7 +83,7 @@
             <form method="post" action="{% url 'course_assignment' %}" novalidate>
                 {% csrf_token %}
                 <input type="hidden" name="lab_course_name" value="{{ course.name }}">
-                {% if add == 'add_lab' %}
+                {% if add == 'add_lab' and pk_lab == course.id %}
                     <div class="form-container">
                         <div class="entries">
                             {% for field in lab_form %}
@@ -96,7 +96,7 @@
                         </div>
                     </div>
                 {% else %}
-                    <button name="lab-add" style="background-color:#6FC276">Add Lab<img src="{% static 'assets/add-circle.svg' %}" alt="trash" width="20px"></button>
+                    <button name="lab-add" value="{{ course.id }}" style="background-color:#6FC276">Add Lab<img src="{% static 'assets/add-circle.svg' %}" alt="trash" width="20px"></button>
                 {% endif %}
             </form>
             {% endif %}
@@ -136,7 +136,7 @@
           <form method="post" action="{% url 'course_assignment' %}" novalidate>
             {% csrf_token %}
             <input type="hidden" name="section_course_name" value="{{ course.name }}">
-            {% if add == 'add_section' %}
+            {% if add == 'add_section' and pk_section == course.id %}
                 <div class="form-container">
                     <div class="entries">
                         {% for field in section_form %}
@@ -149,7 +149,7 @@
                     </div>
                 </div>
             {% else %}
-                <button name="section-add" style="background-color:#6FC276">Add Section<img src="{% static 'assets/add-circle.svg' %}" alt="trash" width="20px"></button>
+                <button name="section-add" value="{{ course.id }}" style="background-color:#6FC276">Add Section<img src="{% static 'assets/add-circle.svg' %}" alt="trash" width="20px"></button>
             {% endif %}
           </form>
             {% endif %}
