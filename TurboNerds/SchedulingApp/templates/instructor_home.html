@@ -23,7 +23,9 @@
             <h5>Course section: {{ section.section_name }}</h5>
             <p>{{ section.start_time }} - {{ section.end_time }}</p>
             <p>Days: {{ section.days }}</p>
-            <p><a href="{% url 'assign_ta' section.course %}">Assign TAs</a></p>
+            {% if request.user == user %}
+            <p><a href="{% url 'assign_tas' section.course %}">Assign TAs</a></p>
+            {% endif %}
         </div>
       {% endfor %}
     {% endif %}

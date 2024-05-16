@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from .forms import RegistrationForm, EditProfileForm, TaAssignment, InstructorAssignment, CreateCourse, LabCreation, \
-    SectionCreation
+    SectionCreation, TaAssignmentForInstructor
 from .models import User, Course, Section, Lab
 from django.db.models import Prefetch
 from django.conf import settings
@@ -144,28 +144,27 @@ class CourseInformation:
             return redirect('login')
         my_course = Course.objects.get(name=course)
         my_lab = Lab.objects.get(lab_name=lab)
-        form = TaAssignment(my_course, my_lab)
+        form = TaAssignment(my_course, my_lab, request.POST, instance=my_lab)
         if request.method == 'POST':
-            form = TaAssignment(my_course, my_lab, request.POST, start_time=my_lab.start_time, end_time=my_lab.end_time)
-            if form.is_valid():
-                form.save()
-                messages.success(request, 'TA successfully assigned to lab.')
-                return redirect('course_assignment')
-
+            assistant = User.objects.get(id=request.POST.get("ta"))
+            my_lab.assistant = assistant
+            my_lab.save()
+            return redirect('course_assignment')
         return render(request, 'course/ta_assignments.html', {'form': form})
 
-    def assign_instructor(request, course):
+    def assign_TasForInstructor(request, course):
         if not request.user.is_authenticated:
             return redirect('login')
         my_course = Course.objects.get(name=course)
         labs = my_course.lab_set
+        print(labs)
+        form = TaAssignmentForInstructor(my_course)
         if not labs:
             messages.error(request, 'No labs assigned to this course')
-            return HttpResponse("<h1>Page not found</h1>")
+            return HttpResponse("<h1>No labs for this course</h1><a href='/'><button>back</button></a>")
 
-            # return redirect('home')
         if request.method == 'POST':
-            form = InstructorAssignment(course, request.POST)
+            form = TaAssignmentForInstructor(my_course, request.POST)
             if form.is_valid():
                 ta = form.cleaned_data['ta']
                 lab = form.cleaned_data['lab']
@@ -173,8 +172,20 @@ class CourseInformation:
                 lab.save()
                 messages.success(request, 'TA successfully assigned to lab.')
                 return redirect('course_assignment')
-        else:
-            form = InstructorAssignment(my_course)
+        return render(request, 'course/ta_assignments.html', {'form': form})
+
+    def assign_instructor(request, section):
+        if not request.user.is_authenticated:
+            return redirect('login')
+        my_section = Section.objects.get(section_name=section)
+
+        form = InstructorAssignment(my_section, request.POST, instance=my_section)
+        if request.method == 'POST':
+            print(request.POST)
+            instructor = User.objects.get(id=request.POST.get("instructor"))
+            my_section.instructor = instructor
+            my_section.save()
+            return redirect('course_assignment')
         return render(request, 'course/instructor_assignment.html', {'form': form})
 
     def read_information(request):

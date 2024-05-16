@@ -54,8 +54,6 @@ class TaAssignment(forms.ModelForm):
         fields = ['ta']
 
     def __init__(self, course, lab, *args, **kwargs):
-        self.start_time = kwargs.pop('start_time', None)
-        self.end_time = kwargs.pop('end_time', None)
         super().__init__(*args, **kwargs)
         self.course_id = course
         self.lab_id = lab
@@ -63,25 +61,20 @@ class TaAssignment(forms.ModelForm):
     def save(self, commit=True):
         instance = super(TaAssignment, self).save(commit=False)
         instance.course = self.course_id
-        instance.start_time = self.start_time  # Assign start_time
-        instance.end_time = self.end_time  # Assign end_time
         if commit:
             instance.save()
         return instance
 
 
-
 class InstructorAssignment(forms.ModelForm):
     instructor = forms.ModelChoiceField(queryset=User.objects.filter(is_instructor=True))
-    section = forms.ModelChoiceField(queryset=Section.objects.all())
 
     class Meta:
         model = Lab
-        fields = ['instructor', 'section']
+        fields = ['instructor']
 
     def __init__(self, course, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['section'].queryset = Section.objects.filter(course=course)
         self.course_id = course
 
 
@@ -195,3 +188,15 @@ class SectionCreation(forms.ModelForm):
 #         if commit:
 #             instance.save()
 #         return instance
+
+class TaAssignmentForInstructor(forms.ModelForm):
+    ta = forms.ModelChoiceField(queryset=User.objects.filter(is_assistant=True))
+    lab = forms.ModelChoiceField(queryset=Lab.objects.all())
+
+    class Meta:
+        model = Lab
+        fields = ['ta', 'lab']
+
+    def __init__(self, course, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['lab'].queryset = Lab.objects.filter(course=course)
