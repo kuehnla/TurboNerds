@@ -116,7 +116,6 @@ class CourseInformation:
             return redirect('login')
         my_course = Course.objects.get(name=course)
         labs = my_course.lab_set
-        print(labs)
         form = TaAssignmentForInstructor(my_course)
         if not labs:
             messages.error(request, 'No labs assigned to this course')
