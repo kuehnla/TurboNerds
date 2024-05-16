@@ -20,7 +20,7 @@ urlpatterns = [
     path('assign_instructor/<str:section>', views.CourseInformation.assign_instructor, name='assign_instructor'),
 
     path('delete_user/<str:email>', views.ProfileModification.delete_user, name='delete_user'),
-    path('delete_course/<str:course>', views.CourseInformation.delete_course, name='delete_course'),
-    path('delete_lab/<str:lab>', views.CourseInformation.delete_lab, name='delete_lab'),
-    path('delete_section/<str:section>', views.CourseInformation.delete_section, name='delete_section'),
+    path('delete_course/<int:id>', views.CourseInformation.delete_course, name='delete_course'),
+    path('delete_lab/<int:id>', views.CourseInformation.delete_lab, name='delete_lab'),
+    path('delete_section/<int:id>', views.CourseInformation.delete_section, name='delete_section'),
 ]

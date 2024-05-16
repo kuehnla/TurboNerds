@@ -71,28 +71,28 @@ class CourseInformation:
                     return HttpResponse("Section bad input, try again")
         return render(request, 'course/course_assignments.html', context)
 
-    def delete_course(request, course):
+    def delete_course(request, id):
         if not request.user.is_authenticated:
             return redirect('login')
-        del_course = Course.objects.get(name=course)
+        del_course = Course.objects.get(id=id)
         if request.method == 'POST':
             del_course.delete()
             return redirect('/course_information/')
         return render(request, 'course/confirm_course_delete.html')
 
-    def delete_lab(request, lab):
+    def delete_lab(request, id):
         if not request.user.is_authenticated:
             return redirect('login')
-        del_lab = Lab.objects.get(lab_name=lab)
+        del_lab = Lab.objects.get(id=id)
         if request.method == 'POST':
             del_lab.delete()
             return redirect('/course_information/')
         return render(request, 'course/confirm_lab_delete.html')
 
-    def delete_section(request, section):
+    def delete_section(request, id):
         if not request.user.is_authenticated:
             return redirect('login')
-        del_section = Section.objects.get(section_name=section)
+        del_section = Section.objects.get(id=id)
         if request.method == 'POST':
             del_section.delete()
             return redirect('/course_information/')

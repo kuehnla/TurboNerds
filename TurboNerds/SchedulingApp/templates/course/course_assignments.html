@@ -43,7 +43,7 @@
           <h2>{{ course.name }} ({{ course.department }} {{ course.number }})</h2>
           {% if request.user.is_admin %}
           <div class="remove">
-            <a id="delete" href="{% url 'delete_course' course.name %}"><img src="{% static 'assets/trash.svg' %}" alt="trash" width="25px"></a>
+            <a id="delete" href="{% url 'delete_course' course.id %}"><img src="{% static 'assets/trash.svg' %}" alt="trash" width="25px"></a>
           </div>
             {% endif %}
         </div>
@@ -69,7 +69,7 @@
                   <td>
                       {% if request.user.is_admin %}
                       <div class="remove">
-                        <a id="delete" href="{% url 'delete_lab' lab.lab_name %}"><img src="{% static 'assets/trash.svg' %}" alt="trash" width="25px"></a>
+                        <a id="delete" href="{% url 'delete_lab' lab.id %}"><img src="{% static 'assets/trash.svg' %}" alt="trash" width="25px"></a>
                       </div>
                       {% endif %}
                   </td>
@@ -122,7 +122,7 @@
                   <td>
                       {% if request.user.is_admin %}
                       <div class="remove">
-                        <a id="delete" href="{% url 'delete_section' section.section_name %}"><img src="{% static 'assets/trash.svg' %}" alt="trash" width="25px"></a>
+                        <a id="delete" href="{% url 'delete_section' section.id %}"><img src="{% static 'assets/trash.svg' %}" alt="trash" width="25px"></a>
                       </div>
                       {% endif %}
                   </td>
