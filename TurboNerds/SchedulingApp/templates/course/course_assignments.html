@@ -60,7 +60,7 @@
                 <tr>
                   <td>{{ lab.assistant.first_name }} {{ lab.assistant.last_name }} 
                       {% if request.user.is_admin %}
-                      <a href="{% url 'assign_ta' course.name lab.lab_name %}"><img src="{% static 'assets/pencil.svg' %}" alt="trash" width="25px"></a>
+                      <a href="{% url 'assign_ta' course.name lab.id %}"><img src="{% static 'assets/pencil.svg' %}" alt="trash" width="25px"></a>
                       {% endif %}
                   </td>
                   <td>{{ lab.lab_name }}</td>
@@ -113,7 +113,7 @@
                 <tr>
                   <td>{{ section.instructor.get_full_name }}
                       {% if request.user.is_admin %}
-                      <a href="{% url 'assign_instructor' section.section_name %}"><img src="{% static 'assets/pencil.svg' %}" alt="trash" width="25px"></a>
+                      <a href="{% url 'assign_instructor' section.id %}"><img src="{% static 'assets/pencil.svg' %}" alt="trash" width="25px"></a>
                       {% endif %}
                   </td>
                   <td>{{ section.start_date }} - {{ section.end_date }}</td>

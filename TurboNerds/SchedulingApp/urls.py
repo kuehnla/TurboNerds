@@ -15,9 +15,9 @@ urlpatterns = [
     path('course_information/', views.CourseInformation.course_assignment, name='course_assignment'),
     path('user_information/', views.CourseInformation.read_information, name='user_information'),
 
-    path('assign_ta/<str:course>/<str:lab>', views.CourseInformation.assign_tas, name='assign_ta'),
+    path('assign_ta/<str:course>/<int:id>', views.CourseInformation.assign_tas, name='assign_ta'),
     path('assign_tas/<str:course>', views.CourseInformation.assign_tas_for_instructor, name='assign_tas'),
-    path('assign_instructor/<str:section>', views.CourseInformation.assign_instructor, name='assign_instructor'),
+    path('assign_instructor/<int:id>', views.CourseInformation.assign_instructor, name='assign_instructor'),
 
     path('delete_user/<str:email>', views.ProfileModification.delete_user, name='delete_user'),
     path('delete_course/<int:id>', views.CourseInformation.delete_course, name='delete_course'),

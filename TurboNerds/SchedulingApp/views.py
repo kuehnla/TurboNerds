@@ -98,11 +98,11 @@ class CourseInformation:
             return redirect('/course_information/')
         return render(request, 'course/confirm_section_delete.html')
 
-    def assign_tas(request, course, lab):
+    def assign_tas(request, course, id):
         if not request.user.is_authenticated:
             return redirect('login')
         my_course = Course.objects.get(name=course)
-        my_lab = Lab.objects.get(lab_name=lab)
+        my_lab = Lab.objects.get(id=id)
         form = TaAssignment(my_course, my_lab, request.POST, instance=my_lab)
         if request.method == 'POST':
             assistant = User.objects.get(id=request.POST.get("ta"))
@@ -132,10 +132,10 @@ class CourseInformation:
                 return redirect('course_assignment')
         return render(request, 'course/ta_assignments.html', {'form': form})
 
-    def assign_instructor(request, section):
+    def assign_instructor(request, id):
         if not request.user.is_authenticated:
             return redirect('login')
-        my_section = Section.objects.get(section_name=section)
+        my_section = Section.objects.get(id=id)
 
         form = InstructorAssignment(my_section, request.POST, instance=my_section)
         if request.method == 'POST':
